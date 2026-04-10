@@ -18,11 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //middlewares
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-  })
-);
+app.use(cors());
 app.use(express.json()); // to parse JSON bodies
 app.use(rateLimiter); // Apply rate limiting middleware to all routes
 app.use('/api', (req, res, next) => {
