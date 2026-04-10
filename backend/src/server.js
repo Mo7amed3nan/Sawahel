@@ -3,7 +3,6 @@ import dotenv from 'dotenv';
 import dns from 'dns';
 import cors from 'cors';
 
-import notesRoutes from './routes/notesRoutes.js';
 import servicesRoutes from './routes/servicesRoutes.js';
 import { connectDB } from './config/db.js';
 import doctorsRoutes from './routes/doctorsRoutes.js';
@@ -28,7 +27,6 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-app.use('/api/notes', notesRoutes);
 app.use('/api/services', servicesRoutes);
 app.use('/api/doctors', doctorsRoutes);
 
