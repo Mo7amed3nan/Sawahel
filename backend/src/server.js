@@ -18,8 +18,20 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //middlewares
-app.use(cors());
-app.use(express.json()); // to parse JSON bodies
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+
+    if (
+      origin === "https://sawahel-2a1m.vercel.app" ||
+      origin.includes("vercel.app")
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("Not allowed by CORS"));
+  }
+}));app.use(express.json()); // to parse JSON bodies
 app.use(rateLimiter); // Apply rate limiting middleware to all routes
 app.use('/api', (req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`);
