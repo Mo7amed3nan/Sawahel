@@ -10,7 +10,7 @@ import rateLimiter from './middleware/rateLimiter.js';
 
 dotenv.config();
 
-if (process.env.FORCE_DNS === 'true') {
+if (process.env.NODE_ENV === 'development') {
   dns.setServers(['8.8.8.8', '1.1.1.1']);
 }
 
@@ -18,7 +18,11 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //middlewares
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+  })
+);
 app.use(express.json()); // to parse JSON bodies
 app.use(rateLimiter); // Apply rate limiting middleware to all routes
 app.use('/api', (req, res, next) => {
@@ -30,8 +34,12 @@ app.use('/api', (req, res, next) => {
 app.use('/api/services', servicesRoutes);
 app.use('/api/doctors', doctorsRoutes);
 
-connectDB().then(() => {
+await connectDB();
+if (process.env.NODE_ENV !== 'production') {
+  const PORT = process.env.PORT || 5001;
+
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
   });
-});
+}
+export default app;
