@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { fetchDoctorById } from '../services/doctorsApi.js';
 import { useParams, useNavigate } from 'react-router';
-
 const DoctorsDetailsPage = () => {
   const [doctorData, setDoctorData] = useState(null);
   const [loading, setLoading] = useState(true);
