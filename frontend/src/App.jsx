@@ -7,6 +7,7 @@ import DoctorsListPage from './features/doctors/pages/DoctorsListPage';
 import DoctorsDetailsPage from './features/doctors/pages/DoctorsDetailsPage';
 import DoctorsEditPage from './features/doctors/pages/DoctorsEditPage';
 import MainLayout from './components/layout/MainLayout';
+import About from './pages/About';
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
           <Route path="/doctors/:id" element={<DoctorsDetailsPage />} />
           <Route path="/doctors/:id/edit" element={<DoctorsEditPage />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/about" element={<About />} />
         </Route>
       </Routes>
     </div>
