@@ -18,28 +18,11 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //middlewares
+// write cors for frontend localhost
+app.use(
+  cors({ origin: process.env.VITE_FRONTEND_URL || 'http://localhost:5173' })
+);
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(
-    cors({
-      origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-
-        if (
-          origin === 'https://sawahel-2a1m.vercel.app' ||
-          origin.includes('vercel.app')
-        ) {
-          return callback(null, true);
-        }
-
-        return callback(new Error('Not allowed by CORS'));
-      },
-    })
-  );
-}
-if (process.env.NODE_ENV === 'development') {
-  app.use(cors());
-}
 app.use(express.json()); // to parse JSON bodies
 app.use(rateLimiter); // Apply rate limiting middleware to all routes
 app.use('/api', (req, res, next) => {

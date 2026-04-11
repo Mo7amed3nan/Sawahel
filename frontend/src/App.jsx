@@ -11,7 +11,7 @@ import About from './pages/About';
 
 const App = () => {
   return (
-    <div data-theme="light" className="min-h-screen">
+    <div data-theme="aqua" className="min-h-screen">
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
