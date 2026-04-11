@@ -8,16 +8,6 @@ export default function Home() {
       icon: Bus,
       desc: 'Bus routes, taxis, and car rentals.',
     },
-    {
-      name: 'Maintenance',
-      icon: Wrench,
-      desc: 'Find local plumbers, electricians, and handymen.',
-    },
-    {
-      name: 'Restaurants',
-      icon: UtensilsCrossed,
-      desc: 'Discover the best places to eat in the city.',
-    },
   ];
 
   return (
@@ -29,9 +19,9 @@ export default function Home() {
             Everything You Need in Sawahel
           </h1>
           <p className="text-xl text-gray-600 mb-10">
-            Your all-in-one city guide. From top-rated doctors to reliable
-            transportation and local professionals, discover the best services
-            our city has to offer.
+            Your all-in-one guide to <strong>Ras Sedr</strong>. From top-rated
+            doctors to reliable transportation and local professionals, discover
+            the best services our city has to offer.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -44,7 +34,7 @@ export default function Home() {
             </Link>
             {/* Secondary Button */}
             <Link
-              to="/doctors/new"
+              to="/doctors/create"
               className="bg-white hover:bg-gray-50 text-blue-600 border border-blue-200 font-semibold py-3 px-8 rounded-lg shadow-sm transition-all hover:-translate-y-1"
             >
               Join as a Professional

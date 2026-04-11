@@ -15,13 +15,12 @@ const NavBar = () => {
             </span>
           </Link>
 
-          {/* Action Button */}
-          <div>
+          <div className="flex items-center gap-6">
             <Link
-              to="/doctors/create"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+              to="/about"
+              className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
             >
-              + Add Doctor Profile
+              About
             </Link>
           </div>
         </div>
