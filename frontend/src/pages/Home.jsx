@@ -57,7 +57,7 @@ export default function Home() {
               Find a Doctor
             </Link>
             <Link
-              to="/doctors/new"
+              to="/doctors/create"
               className="bg-white hover:bg-gray-50 text-blue-600 border border-blue-200 font-semibold py-3 px-8 rounded-lg shadow-sm transition-all hover:-translate-y-1"
             >
               Join as a Professional

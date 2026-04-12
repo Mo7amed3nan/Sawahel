@@ -125,7 +125,7 @@ const DoctorsListPage = () => {
                     View
                   </Link>
                   <Link
-                    to={`/doctors/${doctor._id}/edit`}
+                    to={`/doctors/${doctor._id}/update`}
                     className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-2.5 px-2 text-center rounded-xl transition-colors text-sm border border-blue-100"
                   >
                     Edit

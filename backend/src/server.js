@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import dns from 'dns';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import servicesRoutes from './routes/servicesRoutes.js';
 import { connectDB } from './config/db.js';
@@ -18,11 +19,12 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //middlewares
-// write cors for frontend localhost
 app.use(
   cors({ origin: process.env.VITE_FRONTEND_URL || 'http://localhost:5173' })
 );
 
+app.use(cookieParser()); // to parse cookies
+app.use(express.urlencoded({ extended: true })); // to parse URL-encoded bodies
 app.use(express.json()); // to parse JSON bodies
 app.use(rateLimiter); // Apply rate limiting middleware to all routes
 app.use('/api', (req, res, next) => {
