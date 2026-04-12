@@ -54,7 +54,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-gray-500">
               <li>
                 <Link
-                  to="/doctors/new"
+                  to="/doctors/create"
                   className="hover:text-blue-600 transition-colors"
                 >
                   List Your Service

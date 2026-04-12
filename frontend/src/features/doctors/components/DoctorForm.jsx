@@ -67,7 +67,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. Dr. Ahmed Hassan"
               />
             </div>
@@ -82,7 +82,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 required
                 value={formData.specialty}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. Cardiologist, Electrician"
               />
             </div>
@@ -100,7 +100,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="01xxxxxxxxx"
               />
             </div>
@@ -116,7 +116,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 required
                 value={formData.clinicAddress}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. Main Street, Ras Sedr"
               />
             </div>
@@ -135,7 +135,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 type="text"
                 value={formData.workingDays}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="Sunday, Monday, Tuesday..."
               />
             </div>
@@ -149,7 +149,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 type="text"
                 value={formData.workingHours}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="9 AM - 5 PM"
               />
             </div>
@@ -165,7 +165,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 type="number"
                 value={formData.price}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
+                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. 200"
               />
             </div>
