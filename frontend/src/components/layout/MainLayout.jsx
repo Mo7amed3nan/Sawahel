@@ -4,7 +4,7 @@ import NavBar from './NavBar';
 import Footer from './Footer';
 const MainLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col font-sans bg-gray-50">
+    <div className='min-h-screen flex flex-col font-sans bg-gray-50'>
       <NavBar />
       <main className="flex-grow">
         <Outlet />

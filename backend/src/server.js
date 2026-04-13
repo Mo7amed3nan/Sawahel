@@ -8,6 +8,7 @@ import servicesRoutes from './routes/servicesRoutes.js';
 import { connectDB } from './config/db.js';
 import doctorsRoutes from './routes/doctorsRoutes.js';
 import rateLimiter from './middleware/rateLimiter.js';
+import authRoutes from './routes/authRoutes.js';
 
 dotenv.config();
 
@@ -23,18 +24,18 @@ app.use(
   cors({ origin: process.env.VITE_FRONTEND_URL || 'http://localhost:5173' })
 );
 
-app.use(cookieParser()); // to parse cookies
+app.use(cookieParser()); // to parse cookies to access the cookie in the request object
 app.use(express.urlencoded({ extended: true })); // to parse URL-encoded bodies
 app.use(express.json()); // to parse JSON bodies
 app.use(rateLimiter); // Apply rate limiting middleware to all routes
 app.use('/api', (req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`);
-
   next();
 });
 
 app.use('/api/services', servicesRoutes);
 app.use('/api/doctors', doctorsRoutes);
+app.use('/api/auth', authRoutes);
 
 await connectDB();
 if (process.env.NODE_ENV !== 'production') {
