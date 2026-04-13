@@ -8,7 +8,8 @@ import DoctorsEditPage from './features/doctors/pages/DoctorsEditPage';
 import MainLayout from './components/layout/MainLayout';
 import About from './pages/About';
 import Home from './pages/Home';
-
+import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage';
 const App = () => {
   return (
     <div className="min-h-screen">
@@ -22,6 +23,8 @@ const App = () => {
           <Route path="*" element={<NotFound />} />
           <Route path="/about" element={<About />} />
         </Route>
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
   );
