@@ -1,4 +1,11 @@
-import { useState } from 'react';
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Loader2, AlertCircle } from 'lucide-react'
 
 const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
   const [formData, setFormData] = useState({
@@ -13,226 +20,196 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
     workingHours: initialData?.workingHours || '',
     price: initialData?.price || '',
     images: initialData?.images || [],
-  });
+  })
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked } = e.target
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
+    }))
+  }
+
+  const handleCheckboxChange = (checked) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      available: checked,
+    }))
+  }
 
   if (loading) {
     return (
-      <p className="text-center text-gray-500 py-12 animate-pulse">
-        Loading form data...
-      </p>
-    );
+      <div className="flex justify-center items-center py-12">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
   }
 
   return (
-    <div className="w-full">
-      {' '}
-      {/* Removed max-width here so it fills the parent container */}
+    <Card>
       <form
-        className="bg-white shadow-xl rounded-2xl border border-gray-100 overflow-hidden"
         onSubmit={(e) => {
-          e.preventDefault();
+          e.preventDefault()
           const workingDays =
             typeof formData.workingDays === 'string'
               ? formData.workingDays
                   .split(',')
                   .map((day) => day.trim())
                   .filter(Boolean)
-              : formData.workingDays;
-          onSubmit(e, { ...formData, workingDays });
+              : formData.workingDays
+          onSubmit(e, { ...formData, workingDays })
         }}
       >
-        <div className="bg-gray-50 px-6 sm:px-8 py-6 border-b border-gray-100">
-          <h2 className="text-xl font-bold text-gray-900">
-            Contact & Service Information
-          </h2>
-        </div>
+        <CardHeader className="bg-muted/50 border-b border-border">
+          <CardTitle>Contact & Service Information</CardTitle>
+        </CardHeader>
 
-        <div className="p-6 sm:p-8 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Full Name <span className="text-red-500">*</span>
-              </label>
-              <input
+        <CardContent className="pt-6 space-y-6">
+          {/* Name & Specialty */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">
+                Full Name <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="name"
                 name="name"
                 type="text"
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. Dr. Ahmed Hassan"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Specialty / Profession <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="specialty">
+                Specialty / Profession <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="specialty"
                 name="specialty"
                 type="text"
                 required
                 value={formData.specialty}
                 onChange={handleChange}
-                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. Cardiologist, Electrician"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              {/* Added * and required to Phone */}
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Phone Number <span className="text-red-500">*</span>
-              </label>
-              <input
+          {/* Phone & Address */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="phone">
+                Phone Number <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="phone"
                 name="phone"
                 type="text"
                 required
                 value={formData.phone}
                 onChange={handleChange}
-                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="01xxxxxxxxx"
               />
             </div>
 
-            <div>
-              {/* Added * and required to Address */}
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Location / Address <span className="text-red-500">*</span>
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="clinicAddress">
+                Location / Address <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="clinicAddress"
                 name="clinicAddress"
                 type="text"
                 required
                 value={formData.clinicAddress}
                 onChange={handleChange}
-                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. Main Street, Ras Sedr"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
+          {/* Working Days & Hours */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="md:col-span-2 space-y-2">
+              <Label htmlFor="workingDays">
                 Working Days{' '}
-                <span className="text-gray-400 font-normal">
-                  (Comma separated)
-                </span>
-              </label>
-              <input
+                <span className="text-muted-foreground font-normal">(Comma separated)</span>
+              </Label>
+              <Input
+                id="workingDays"
                 name="workingDays"
                 type="text"
                 value={formData.workingDays}
                 onChange={handleChange}
-                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="Sunday, Monday, Tuesday..."
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Working Hours
-              </label>
-              <input
+            <div className="space-y-2">
+              <Label htmlFor="workingHours">Working Hours</Label>
+              <Input
+                id="workingHours"
                 name="workingHours"
                 type="text"
                 value={formData.workingHours}
                 onChange={handleChange}
-                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="9 AM - 5 PM"
               />
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Service Fee (EGP)
-              </label>
-              <input
+          {/* Price & Availability */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+            <div className="space-y-2">
+              <Label htmlFor="price">Service Fee (EGP)</Label>
+              <Input
+                id="price"
                 name="price"
                 type="number"
                 value={formData.price}
                 onChange={handleChange}
-                className="text-black w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors outline-none"
                 placeholder="e.g. 200"
               />
             </div>
 
-            <div className="flex items-center h-[50px] px-4 bg-gray-50 border border-gray-200 rounded-lg transition-colors hover:bg-gray-100">
-              <input
-                id="availability-toggle"
-                name="available"
-                type="checkbox"
+            <div className="flex items-center h-10 gap-3 px-4 bg-muted rounded-md border border-input">
+              <Checkbox
+                id="available"
                 checked={formData.available}
-                onChange={handleChange}
-                className="w-5 h-5 text-blue-600 bg-white border-gray-300 rounded focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                onCheckedChange={handleCheckboxChange}
               />
-              <label
-                htmlFor="availability-toggle"
-                className="ml-3 text-sm font-bold text-gray-700 cursor-pointer select-none w-full"
-              >
+              <Label htmlFor="available" className="cursor-pointer font-medium">
                 Currently Available / Accepting Clients
-              </label>
+              </Label>
             </div>
           </div>
-        </div>
+        </CardContent>
 
-        <div className="bg-gray-50 px-6 sm:px-8 py-5 border-t border-gray-100 flex flex-col items-center">
+        <CardFooter className="flex flex-col items-center gap-4 bg-muted/50 border-t border-border">
           {error && (
-            <div className="w-full mb-4 bg-red-100 text-red-700 border border-red-200 rounded-lg p-3 text-sm font-medium text-center">
-              {error}
-            </div>
+            <Alert variant="destructive" className="w-full">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
-          <button
-            type="submit"
-            disabled={saving}
-            className="w-full sm:w-auto sm:min-w-[200px] bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-md transition-all disabled:opacity-60 disabled:cursor-not-allowed flex justify-center items-center gap-2"
-          >
+          <Button type="submit" disabled={saving} className="w-full sm:w-auto sm:min-w-[200px]">
             {saving ? (
               <>
-                <svg
-                  className="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Saving...
               </>
             ) : (
               'Save Profile'
             )}
-          </button>
-        </div>
+          </Button>
+        </CardFooter>
       </form>
-    </div>
-  );
-};
+    </Card>
+  )
+}
 
-export default DoctorForm;
+export default DoctorForm

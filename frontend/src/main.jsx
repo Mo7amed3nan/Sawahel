@@ -4,6 +4,10 @@ import './index.css';
 import App from './App.jsx';
 import { BrowserRouter } from 'react-router';
 import { Toaster } from 'react-hot-toast';
+
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
