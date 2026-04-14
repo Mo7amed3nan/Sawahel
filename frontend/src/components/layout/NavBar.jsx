@@ -1,32 +1,49 @@
-import React from 'react';
-import { Link } from 'react-router';
-import { Waves } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Waves, Moon, Sun } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+export default function NavBar() {
+  const [theme, setTheme] = useState(
+    () => localStorage.getItem('theme') || 'light'
+  );
 
-const NavBar = () => {
+  const handleThemeToggle = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    localStorage.setItem('theme', nextTheme);
+    document.documentElement.classList.toggle('dark', nextTheme === 'dark');
+  };
+
   return (
-    <nav className="bg-white shadow-md border-b border-gray-100">
+    <nav className="bg-background border-b border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 items-center">
-          {/* Logo Section */}
+          {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <Waves className="h-8 w-8 text-blue-600" />
-            <span className="font-bold text-2xl tracking-tight text-gray-900">
+            <Waves className="h-8 w-8 text-primary" />
+            <span className="font-bold text-2xl tracking-tight text-foreground">
               Sawahel
             </span>
           </Link>
 
-          <div className="flex items-center gap-6">
-            <Link
-              to="/about"
-              className="text-gray-600 hover:text-blue-600 font-medium transition-colors"
-            >
-              About
-            </Link>
+          {/* Navigation Links */}
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" asChild>
+              <Link to="/about">About</Link>
+            </Button>
+            <Button variant="ghost" asChild>
+              <Link to="/doctors">Services</Link>
+            </Button>
+            <Button onClick={handleThemeToggle}>
+              {theme === 'light' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </Button>
           </div>
         </div>
       </div>
     </nav>
   );
-};
-
-export default NavBar;
+}

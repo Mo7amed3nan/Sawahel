@@ -1,149 +1,155 @@
-import React, { useEffect, useState } from 'react';
-import { fetchDoctors, deleteDoctor } from '../services/doctorsApi.js';
-import { Link } from 'react-router';
-import { useNavigate } from 'react-router';
-import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { fetchDoctors, deleteDoctor } from '../services/doctorsApi'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ArrowLeft, Loader2, AlertCircle, Eye, Pencil, Trash2 } from 'lucide-react'
+import toast from 'react-hot-toast'
 
-const DoctorsListPage = () => {
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const navigate = useNavigate();
+export default function DoctorsListPage() {
+  const [doctors, setDoctors] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const loadDoctors = async () => {
       try {
-        const response = await fetchDoctors();
-        setDoctors(response.data);
-      } catch (error) {
-        setError('Failed to fetch doctors');
+        const response = await fetchDoctors()
+        setDoctors(response.data)
+      } catch (err) {
+        setError('Failed to fetch doctors')
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
-    loadDoctors();
-  }, []);
+    }
+    loadDoctors()
+  }, [])
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this doctor?')) return;
+    if (!window.confirm('Are you sure you want to delete this doctor?')) return
     try {
-      await deleteDoctor(id);
-      setDoctors(doctors.filter((doctor) => doctor._id !== id));
-      toast.success('Doctor deleted successfully');
-    } catch (error) {
-      toast.error('Failed to delete doctor');
+      await deleteDoctor(id)
+      setDoctors(doctors.filter((doctor) => doctor._id !== id))
+      toast.success('Doctor deleted successfully')
+    } catch (err) {
+      toast.error('Failed to delete doctor')
     }
-  };
+  }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Navigation & Header */}
-      <div className="mb-10 border-b border-gray-100 pb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="mb-6 text-gray-500 hover:text-gray-900 font-medium flex items-center gap-2 transition-colors"
-        >
-          &larr; Back
-        </button>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
-          Service Directory
-        </h1>
-        <p className="text-gray-500 mt-2 text-lg">
-          Browse and manage registered professionals in Ras Sedr.
-        </p>
-      </div>
-
-      {/* Loading State (Matches Details Page) */}
-      {loading && (
-        <div className="flex justify-center items-center min-h-[40vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        </div>
-      )}
-
-      {/* Error State (Matches Details Page) */}
-      {!loading && error && (
-        <div className="max-w-3xl mx-auto mt-12 bg-red-50 text-red-600 p-6 rounded-xl text-center font-medium border border-red-100">
-          {error}
-        </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && !error && doctors.length === 0 && (
-        <div className="text-center py-20 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-          <p className="text-gray-500 text-lg font-medium">
-            No professionals found.
+    <div className="min-h-screen bg-background">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
+        <div className="mb-10 border-b border-border pb-6">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6"
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back
+          </Button>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
+            Service Directory
+          </h1>
+          <p className="text-muted-foreground mt-2 text-lg">
+            Browse and manage registered professionals in Ras Sedr.
           </p>
-          <p className="text-gray-400 mt-1">Be the first to list a service!</p>
         </div>
-      )}
 
-      {/* Grid of Doctor Cards */}
-      {!loading && !error && doctors.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {doctors.map((doctor) => (
-            <div
-              key={doctor._id}
-              className="bg-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden border border-gray-100 flex flex-col group"
-            >
-              {/* Cover Banner (Matches Details Page theme) */}
-              <div className="h-20 bg-gradient-to-r from-blue-600 to-blue-400 relative">
-                {/* Avatar Cutout */}
-                <div className="absolute -bottom-6 left-6 h-16 w-16 bg-white rounded-full p-1 shadow-md transition-transform group-hover:scale-105">
-                  <div className="h-full w-full bg-gray-100 rounded-full flex items-center justify-center text-gray-400 text-2xl font-bold">
-                    {doctor.name.charAt(0).toUpperCase()}
+        {/* Loading State */}
+        {loading && (
+          <div className="flex justify-center items-center min-h-[40vh]">
+            <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          </div>
+        )}
+
+        {/* Error State */}
+        {!loading && error && (
+          <div className="max-w-3xl mx-auto">
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!loading && !error && doctors.length === 0 && (
+          <Card className="text-center py-20 border-dashed">
+            <CardContent>
+              <p className="text-muted-foreground text-lg font-medium">
+                No professionals found.
+              </p>
+              <p className="text-muted-foreground mt-1">Be the first to list a service!</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Grid of Doctor Cards */}
+        {!loading && !error && doctors.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {doctors.map((doctor) => (
+              <Card key={doctor._id} className="flex flex-col overflow-hidden">
+                {/* Cover Banner */}
+                <div className="h-16 bg-primary relative">
+                  {/* Avatar */}
+                  <div className="absolute -bottom-6 left-6 h-14 w-14 bg-background rounded-full p-1 border-2 border-background shadow-md">
+                    <div className="h-full w-full bg-muted rounded-full flex items-center justify-center text-muted-foreground text-xl font-bold">
+                      {doctor.name.charAt(0).toUpperCase()}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Card Body */}
-              <div className="pt-10 px-6 pb-4 flex-grow">
-                <h3 className="text-xl font-extrabold text-gray-900 truncate">
-                  {doctor.name}
-                </h3>
-                <p className="text-sm font-semibold text-blue-600 mt-1">
-                  {doctor.specialty}
-                </p>
+                {/* Card Body */}
+                <CardHeader className="pt-10 pb-4">
+                  <h3 className="text-xl font-bold text-foreground truncate">
+                    {doctor.name}
+                  </h3>
+                  <p className="text-sm font-semibold text-primary">
+                    {doctor.specialty}
+                  </p>
+                </CardHeader>
 
-                {/* Availability Indicator */}
-                <div className="mt-4 flex items-center gap-2 bg-gray-50 inline-flex px-3 py-1.5 rounded-lg border border-gray-100">
-                  <span
-                    className={`h-2 w-2 rounded-full ${doctor.available ? 'bg-green-500' : 'bg-red-500'}`}
-                  ></span>
-                  <span className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+                <CardContent className="pt-0 pb-4 flex-grow">
+                  <Badge variant={doctor.available ? 'default' : 'secondary'} className="gap-1.5">
+                    <span className={`h-2 w-2 rounded-full ${doctor.available ? 'bg-green-400' : 'bg-red-400'}`} />
                     {doctor.available ? 'Available' : 'Unavailable'}
-                  </span>
-                </div>
-              </div>
+                  </Badge>
+                </CardContent>
 
-              {/* Card Action Buttons */}
-              <div className="px-6 pb-6 mt-auto">
-                <div className="flex items-center gap-2 pt-4 border-t border-gray-100">
-                  <Link
-                    to={`/doctors/${doctor._id}`}
-                    className="flex-1 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold py-2.5 px-2 text-center rounded-xl transition-colors text-sm border border-gray-200"
-                  >
-                    View
-                  </Link>
-                  <Link
-                    to={`/doctors/${doctor._id}/update`}
-                    className="flex-1 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold py-2.5 px-2 text-center rounded-xl transition-colors text-sm border border-blue-100"
-                  >
-                    Edit
-                  </Link>
-                  <button
+                {/* Action Buttons */}
+                <CardFooter className="pt-4 border-t border-border gap-2">
+                  <Button variant="outline" size="lg" className="flex-1" asChild>
+                    <Link to={`/doctors/${doctor._id}`}>
+                      <Eye className="mr-1 h-4 w-4" />
+                      View
+                    </Link>
+                  </Button>
+                  <Button variant="outline" size="lg" className="flex-1" asChild>
+                    <Link to={`/doctors/${doctor._id}/update`}>
+                      <Pencil className="mr-1 h-4 w-4" />
+                      Edit
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="flex-1 text-destructive hover:text-destructive"
                     onClick={() => handleDelete(doctor._id)}
-                    className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 font-bold py-2.5 px-2 text-center rounded-xl transition-colors text-sm border border-red-100"
                   >
+                    <Trash2 className="mr-1 h-4 w-4" />
                     Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
-  );
-};
-
-export default DoctorsListPage;
+  )
+}

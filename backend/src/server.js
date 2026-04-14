@@ -20,9 +20,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //middlewares
-app.use(
-  cors({ origin: process.env.VITE_FRONTEND_URL || 'http://localhost:5173' })
-);
+app.use(cors({ origin: process.env.VITE_FRONTEND_URL }));
 
 app.use(cookieParser()); // to parse cookies to access the cookie in the request object
 app.use(express.urlencoded({ extended: true })); // to parse URL-encoded bodies
