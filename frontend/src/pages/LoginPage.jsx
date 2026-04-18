@@ -11,14 +11,20 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
+import { useAuthStore } from '@/store/authStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const { login, error, isLoading } = useAuthStore();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login submitted:', { email, password });
+    await login(email, password);
+    if (error) return;
+    navigate('/');
   };
 
   return (
@@ -54,9 +60,13 @@ export default function LoginPage() {
               />
             </div>
           </CardContent>
+          {error && (
+            <div className="text-destructive text-sm text-center">{error}</div>
+          )}
           <CardFooter>
             <Button type="submit" className="w-full">
-              Login
+              {isLoading && <span>Logging in...</span>}
+              {!isLoading && <span>Login</span>}
             </Button>
           </CardFooter>
         </form>
@@ -64,5 +74,3 @@ export default function LoginPage() {
     </main>
   );
 }
-
-

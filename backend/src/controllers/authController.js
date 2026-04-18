@@ -77,9 +77,8 @@ export const login = async (req, res) => {
     res.status(200).json({
       message: 'Login successful',
       user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
+        ...user._doc,
+        password: undefined,
       },
     });
   } catch (error) {
@@ -109,7 +108,12 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpiresAt = undefined;
     await user.save();
     await sendWelcomeEmail(user.email, user.name);
-    res.status(200).json({ message: 'Email verified successfully' });
+    res
+      .status(200)
+      .json({
+        message: 'Email verified successfully',
+        user: { ...user._doc, password: undefined },
+      });
   } catch (error) {
     res
       .status(500)
@@ -192,4 +196,3 @@ export const checkAuth = async (req, res) => {
   }
 };
 
-//how to save all the files in vscode ?

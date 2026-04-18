@@ -1,7 +1,8 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Card,
   CardContent,
@@ -9,17 +10,23 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-
+} from '@/components/ui/card';
+import { useAuthStore } from '@/store/authStore';
 export default function SignUpPage() {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Sign up submitted:", { name, email, password })
-  }
+  const { signup, error, isLoading } = useAuthStore();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await signup(name, email, password);
+    if(error)return;
+    navigate('/verify-email');
+    
+  };
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -61,17 +68,22 @@ export default function SignUpPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className='mb-2'
+                className="mb-2"
               />
             </div>
           </CardContent>
+          {error && (
+            <div className="mb-3 flex justify-center text-red-500 text-sm px-4">
+              {error}
+            </div>
+          )}
           <CardFooter>
-            <Button type="submit" className="w-full">
-              Sign Up
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Signing Up...' : 'Sign Up'}
             </Button>
           </CardFooter>
         </form>
       </Card>
     </main>
-  )
+  );
 }
