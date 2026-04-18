@@ -10,7 +10,18 @@ import About from './pages/About';
 import Home from './pages/Home';
 import SignupPage from './pages/SignupPage';
 import LoginPage from './pages/LoginPage';
+import VerifyEmailPage from './pages/VerifyEmailPage';
+import { useAuthStore } from './store/authStore';
+import { useEffect } from 'react';
 const App = () => {
+  const { isCheckingAuth, checkAuth, isAuthenticated, user } = useAuthStore();
+  
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  console.log(user);
+  console.log(isAuthenticated);
   return (
     <div className="min-h-screen">
       <Routes>
@@ -25,6 +36,7 @@ const App = () => {
         </Route>
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
       </Routes>
     </div>
   );
