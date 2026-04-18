@@ -54,15 +54,18 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  
-
-  checkAuth: async() => {
-    set({ isCheckingAuth: true, error: null});
-    try{
-      const {data} = await api.get('auth/check-auth');
-      set({user: data.user, isAuthenticated: true, user: data.user}); 
-    }catch(error){
-      set({error: error.response?.data?.message, isAuthenticated: false, user: null, isCheckingAuth: false});
+  checkAuth: async () => {
+    set({ isCheckingAuth: true, error: null });
+    try {
+      const { data } = await api.get('/auth/check-auth');
+      set({ user: data.user, isAuthenticated: true, user: data.user });
+    } catch (error) {
+      set({
+        error: error.response?.data?.message,
+        isAuthenticated: false,
+        user: null,
+        isCheckingAuth: false,
+      });
     }
-  }
+  },
 }));

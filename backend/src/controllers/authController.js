@@ -108,12 +108,10 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpiresAt = undefined;
     await user.save();
     await sendWelcomeEmail(user.email, user.name);
-    res
-      .status(200)
-      .json({
-        message: 'Email verified successfully',
-        user: { ...user._doc, password: undefined },
-      });
+    res.status(200).json({
+      message: 'Email verified successfully',
+      user: { ...user._doc, password: undefined },
+    });
   } catch (error) {
     res
       .status(500)
@@ -136,7 +134,7 @@ export const forgetPassword = async (req, res) => {
     await user.save();
     await sendPasswordResetEmail(
       email,
-      `${process.env.FRONTEND_URL}/reset-password/${resetPasswordToken}`
+      `${process.env.VITE_FRONTEND_URL}/reset-password/${resetPasswordToken}`
     );
     res.status(200).json({ message: 'Password reset email sent successfully' });
   } catch (error) {
@@ -195,4 +193,3 @@ export const checkAuth = async (req, res) => {
       .json({ message: 'Error checking authentication', error: error.message });
   }
 };
-
