@@ -27,12 +27,11 @@ export const sendWelcomeEmail = async (userEmail, userName) => {
       subject: 'Welcome to Sawahel',
       html: welcomeEmailTemplate(userName),
     });
-    console.log('Welcome email sent:', data);
-    console.error('Error sending welcome email:', error);
   } catch (error) {
     console.error('Error sending welcome email:', error);
     throw new Error('Failed to send welcome email');
   }
+   
 };
 
 export const sendPasswordResetEmail = async (userEmail, resetUrl) => {

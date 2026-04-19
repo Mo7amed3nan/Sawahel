@@ -7,6 +7,8 @@ import cookieParser from 'cookie-parser';
 import servicesRoutes from './routes/servicesRoutes.js';
 import { connectDB } from './config/db.js';
 import doctorsRoutes from './routes/doctorsRoutes.js';
+import doctorApplicationRoutes from './routes/doctorApplicationRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import rateLimiter from './middleware/rateLimiter.js';
 import authRoutes from './routes/authRoutes.js';
 
@@ -30,7 +32,7 @@ app.use(
 app.use(cookieParser()); // to parse cookies to access the cookie in the request object
 app.use(express.urlencoded({ extended: true })); // to parse URL-encoded bodies
 app.use(express.json()); // to parse JSON bodies
-app.use(rateLimiter); // Apply rate limiting middleware to all routes
+app.use(rateLimiter); // Apply rate limiting middleware to all routes  ** need to get the IP address of the user and use it in the rate limiter instead of a fixed value before final deployment
 app.use('/api', (req, res, next) => {
   console.log(`${req.method} ${req.originalUrl}`);
   next();
@@ -38,14 +40,14 @@ app.use('/api', (req, res, next) => {
 
 app.use('/api/services', servicesRoutes);
 app.use('/api/doctors', doctorsRoutes);
+app.use('/api/doctor-applications', doctorApplicationRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 
 await connectDB();
 if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5001;
-
   app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+    console.log(`Server running on  http://localhost:${PORT}`);
   });
 }
 export default app;

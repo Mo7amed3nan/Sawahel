@@ -1,0 +1,12 @@
+import api from '@/utils/axios';
+
+export const signupRequest = (payload) => api.post('/auth/signup', payload);
+
+export const verifyEmailRequest = (payload) =>
+  api.post('/auth/verify-email', payload);
+
+export const loginRequest = (payload) => api.post('/auth/login', payload);
+
+export const checkAuthRequest = () => api.get('/auth/check-auth');
+
+export const logoutRequest = () => api.post('/auth/logout', {});
