@@ -1,71 +1,65 @@
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
-import { updateDoctor, fetchDoctorById } from '../services/doctorsApi'
-import DoctorForm from '../components/DoctorForm'
-import { Button } from '@/components/ui/button'
-import { ArrowLeft, Loader2 } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDoctorsStore } from '@/features/doctors/doctorsStore';
+import DoctorForm from '../components/DoctorForm';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function DoctorsEditPage() {
-  const navigate = useNavigate()
-  const { id: doctorId } = useParams()
+  const navigate = useNavigate();
+  const { id: doctorId } = useParams();
+  const { selectedDoctor, isLoading, error, loadDoctorById, editDoctor } =
+    useDoctorsStore();
 
-  const [initialData, setInitialData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [saving, setSaving] = useState(false)
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const loadDoctor = async () => {
       try {
-        const response = await fetchDoctorById(doctorId)
-        setInitialData(response.data || response)
+        await loadDoctorById(doctorId);
       } catch (err) {
-        const errMsg = err.response?.data?.message || 'Failed to load profile data'
-        console.error('Fetch Error:', err)
-        toast.error(errMsg)
-        navigate(-1)
-      } finally {
-        setLoading(false)
+        const errMsg =
+          err.response?.data?.message || 'Failed to load profile data';
+        console.error('Fetch Error:', err);
+        toast.error(errMsg);
+        navigate(-1);
       }
-    }
-    loadDoctor()
-  }, [doctorId, navigate])
+    };
+    loadDoctor();
+  }, [doctorId, loadDoctorById, navigate]);
 
   const handleSubmit = async (e, doctorData) => {
     try {
-      setError(null)
-      setSaving(true)
-      await updateDoctor(doctorId, doctorData)
-      toast.success('Profile updated successfully!')
-      navigate(-1)
+      setSaving(true);
+      await editDoctor(doctorId, doctorData);
+      toast.success('Profile updated successfully!');
+      navigate(-1);
     } catch (err) {
-      const errMsg = err.response?.data?.message || err.message || 'Failed to update profile'
-      console.error('Update Error:', err)
-      toast.error(errMsg)
-      setError(errMsg)
+      const errMsg =
+        err.response?.data?.message ||
+        err.message ||
+        'Failed to update profile';
+      console.error('Update Error:', err);
+      toast.error(errMsg);
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
       </div>
-    )
+    );
   }
 
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Back Button */}
-        <Button
-          variant="ghost"
-          onClick={() => navigate(-1)}
-          className="mb-8"
-        >
+        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-8">
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back
         </Button>
@@ -82,7 +76,7 @@ export default function DoctorsEditPage() {
 
         {/* Form */}
         <DoctorForm
-          initialData={initialData}
+          initialData={selectedDoctor || {}}
           onSubmit={handleSubmit}
           error={error}
           saving={saving}
@@ -90,5 +84,5 @@ export default function DoctorsEditPage() {
         />
       </div>
     </div>
-  )
+  );
 }

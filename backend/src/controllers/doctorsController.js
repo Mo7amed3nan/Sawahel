@@ -13,7 +13,18 @@ export const getAllDoctors = async (req, res) => {
 
 export const createDoctor = async (req, res) => {
   try {
-    const doctor = new Doctor(req.body);
+    if (req.role !== 'doctor') {
+      return res.status(403).json({ message: 'Forbidden: doctor access only' });
+    }
+
+    const userId = req.userId;
+    const existingDoctor = await Doctor.findOne({ userId });
+    if (existingDoctor) {
+      return res
+        .status(400)
+        .json({ message: 'Doctor profile already exists for this user' });
+    }
+    const doctor = new Doctor({ ...req.body, userId });
     await doctor.save();
     res.status(201).json(doctor);
   } catch (error) {
@@ -28,11 +39,24 @@ export const updateDoctor = async (req, res) => {
     const doctor = req.body;
     const id = req.params.id;
     const doctorExists = await Doctor.findById(id);
-    if (!doctorExists)
+    if (!doctorExists) {
       return res.status(404).json({ message: 'Doctor not found' });
+    }
+
+    const isAdmin = req.role === 'admin';
+    const isOwner =
+      req.role === 'doctor' &&
+      String(doctorExists.userId) === String(req.userId);
+
+    if (!isAdmin && !isOwner) {
+      return res
+        .status(403)
+        .json({ message: 'Forbidden: not allowed to edit this doctor' });
+    }
 
     const updatedDoctor = await Doctor.findByIdAndUpdate(id, doctor, {
       new: true,
+      runValidators: true,
     });
     res.status(200).json(updatedDoctor);
   } catch (error) {
@@ -44,6 +68,10 @@ export const updateDoctor = async (req, res) => {
 
 export const deleteDoctor = async (req, res) => {
   try {
+    if (req.role !== 'admin') {
+      return res.status(403).json({ message: 'Forbidden: admin access only' });
+    }
+
     const id = req.params.id;
     const doctorExists = await Doctor.findById(id);
     if (!doctorExists)

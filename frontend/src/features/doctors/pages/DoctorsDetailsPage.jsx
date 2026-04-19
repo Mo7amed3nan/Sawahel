@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { fetchDoctorById } from '../services/doctorsApi';
+import { useDoctorsStore } from '@/features/doctors/doctorsStore';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,9 +17,8 @@ import {
 } from 'lucide-react';
 
 export default function DoctorsDetailsPage() {
-  const [doctorData, setDoctorData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { selectedDoctor, isLoading, error, loadDoctorById } =
+    useDoctorsStore();
 
   const { id: doctorId } = useParams();
   const navigate = useNavigate();
@@ -27,19 +26,17 @@ export default function DoctorsDetailsPage() {
   useEffect(() => {
     const getDoctorDetails = async () => {
       try {
-        const response = await fetchDoctorById(doctorId);
-        setDoctorData(response.data || response);
+        await loadDoctorById(doctorId);
       } catch (err) {
         console.error('Failed to fetch doctor details', err);
-        setError('Failed to load professional details');
-      } finally {
-        setLoading(false);
       }
     };
     getDoctorDetails();
-  }, [doctorId]);
+  }, [doctorId, loadDoctorById]);
 
-  if (loading) {
+  const doctorData = selectedDoctor;
+
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -47,12 +44,14 @@ export default function DoctorsDetailsPage() {
     );
   }
 
-  if (error) {
+  if (error || !doctorData) {
     return (
       <div className="max-w-3xl mx-auto mt-12 px-4">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>
+            {error || 'Failed to load professional details'}
+          </AlertDescription>
         </Alert>
       </div>
     );

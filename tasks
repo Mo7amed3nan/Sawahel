@@ -1,0 +1,4 @@
+- add resend verification code in SignupPage
+- remove the apply for a doctor from navbar and add this in the doctors service
+- solve error when i firstly login as a user whose role is doctor, when i manage my info, all the fields are empty, when i go back then to the page again, it become with data
+- 
