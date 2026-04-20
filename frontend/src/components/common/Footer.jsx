@@ -40,7 +40,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link
-                  to="/doctors"
+                  to="/services"
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
                   Service Directory

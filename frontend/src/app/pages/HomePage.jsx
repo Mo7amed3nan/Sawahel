@@ -20,9 +20,6 @@ export default function HomePage() {
             <Button asChild size="lg">
               <Link to="/doctors">Find a Doctor</Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
-              <Link to="/signup">Join as a Professional</Link>
-            </Button>
           </div>
         </div>
       </section>

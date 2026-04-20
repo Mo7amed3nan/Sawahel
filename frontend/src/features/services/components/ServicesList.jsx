@@ -10,10 +10,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useServicesStore } from '@/features/services/servicesStore';
+import { useAuthStore } from '@/features/auth/authStore';
 
 export default function ServicesList() {
   const { services, loadServices } = useServicesStore();
+  const { isAuthenticated, user } = useAuthStore();
+  const canApplyForDoctor = isAuthenticated && user?.role !== 'doctor';
 
   useEffect(() => {
     loadServices();
@@ -23,15 +27,15 @@ export default function ServicesList() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {services.map((service, index) => {
         const Icon = LucideIcons[service.icon] || LucideIcons.Stethoscope;
+        const servicePath = service.path || '/services';
 
         if (service.isActive) {
           return (
-            <Link
+            <Card
               key={service.id || index}
-              to={service.path || '/services'}
-              className="block"
+              className="h-full transition-colors hover:border-primary"
             >
-              <Card className="h-full transition-colors hover:border-primary">
+              <Link to={servicePath} className="block text-left">
                 <CardHeader className="flex-row items-start gap-4 space-y-0">
                   <div className="bg-primary/10 p-3 rounded-lg">
                     <Icon className="w-6 h-6 text-primary" />
@@ -44,12 +48,24 @@ export default function ServicesList() {
                   </div>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <span className="text-sm font-medium text-primary inline-flex items-center gap-1">
+                  <span className="inline-flex items-center gap-2 text-sm font-medium text-primary">
                     Browse Directory <ArrowRight className="w-4 h-4" />
                   </span>
                 </CardContent>
-              </Card>
-            </Link>
+              </Link>
+
+              {service.id === 'doctors' && canApplyForDoctor && (
+                <CardContent className="pt-0">
+                  <Button
+                    variant="outline"
+                    asChild
+                    className="w-full sm:w-auto"
+                  >
+                    <Link to="/apply-for-doctor">Apply as Doctor</Link>
+                  </Button>
+                </CardContent>
+              )}
+            </Card>
           );
         }
 

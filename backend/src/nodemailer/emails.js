@@ -1,15 +1,26 @@
-import resend from './config.js';
+import transporter from './config.js';
 import {
   verificationEmailTemplate,
   welcomeEmailTemplate,
   passwordResetTemplate,
   resetSuccessTemplate,
 } from './emailsTemplates.js';
+
+const FROM_EMAIL = process.env.MAIL_FROM || process.env.RESEND_FROM_EMAIL;
+
+const getFromEmail = () => {
+  if (!FROM_EMAIL) {
+    throw new Error('MAIL_FROM is not configured');
+  }
+
+  return FROM_EMAIL;
+};
+
 export const sendVerificationEmail = async (verificationToken, userEmail) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: [userEmail],
+    await transporter.sendMail({
+      from: getFromEmail(),
+      to: userEmail,
       subject: 'Verify Your Email Address',
       html: verificationEmailTemplate(verificationToken),
     });
@@ -21,9 +32,9 @@ export const sendVerificationEmail = async (verificationToken, userEmail) => {
 
 export const sendWelcomeEmail = async (userEmail, userName) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: [userEmail],
+    await transporter.sendMail({
+      from: getFromEmail(),
+      to: userEmail,
       subject: 'Welcome to Sawahel',
       html: welcomeEmailTemplate(userName),
     });
@@ -31,14 +42,13 @@ export const sendWelcomeEmail = async (userEmail, userName) => {
     console.error('Error sending welcome email:', error);
     throw new Error('Failed to send welcome email');
   }
-   
 };
 
 export const sendPasswordResetEmail = async (userEmail, resetUrl) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: [userEmail],
+    await transporter.sendMail({
+      from: getFromEmail(),
+      to: userEmail,
       subject: 'Password Reset Request',
       html: passwordResetTemplate(resetUrl),
     });
@@ -50,9 +60,9 @@ export const sendPasswordResetEmail = async (userEmail, resetUrl) => {
 
 export const sendResetSuccessEmail = async (userEmail) => {
   try {
-    const { data, error } = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: [userEmail],
+    await transporter.sendMail({
+      from: getFromEmail(),
+      to: userEmail,
       subject: 'Password Reset Successful',
       html: resetSuccessTemplate(),
     });

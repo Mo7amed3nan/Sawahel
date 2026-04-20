@@ -25,6 +25,18 @@ export default function AdminDashboardPage() {
     rejectDoctorApplication,
   } = useAdminStore();
 
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        await loadApplications();
+      } catch (err) {
+        toast.error('Failed to load applications');
+      }
+    };
+
+    fetchApplications();
+  }, [loadApplications]);
+
   if (user?.role !== 'admin') {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -40,18 +52,6 @@ export default function AdminDashboardPage() {
       </div>
     );
   }
-
-  useEffect(() => {
-    const fetchApplications = async () => {
-      try {
-        await loadApplications();
-      } catch (err) {
-        toast.error('Failed to load applications');
-      }
-    };
-
-    fetchApplications();
-  }, [loadApplications]);
 
   const handleApprove = async (applicationId) => {
     try {
