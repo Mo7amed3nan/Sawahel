@@ -1,63 +1,75 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2, AlertCircle } from 'lucide-react';
+
+const buildFormData = (initialData = {}) => ({
+  name: initialData?.name || '',
+  specialty: initialData?.specialty || '',
+  phone: initialData?.phone || '',
+  clinicAddress: initialData?.clinicAddress || '',
+  available: initialData?.available || false,
+  workingDays: Array.isArray(initialData?.workingDays)
+    ? initialData.workingDays.join(', ')
+    : initialData?.workingDays || '',
+  workingHours: initialData?.workingHours || '',
+  price: initialData?.price || '',
+  images: initialData?.images || [],
+});
 
 const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
-  const [formData, setFormData] = useState({
-    name: initialData?.name || '',
-    specialty: initialData?.specialty || '',
-    phone: initialData?.phone || '',
-    clinicAddress: initialData?.clinicAddress || '',
-    available: initialData?.available || false,
-    workingDays: Array.isArray(initialData?.workingDays)
-      ? initialData.workingDays.join(', ')
-      : initialData?.workingDays || '',
-    workingHours: initialData?.workingHours || '',
-    price: initialData?.price || '',
-    images: initialData?.images || [],
-  })
+  const [formData, setFormData] = useState(buildFormData(initialData));
+
+  useEffect(() => {
+    setFormData(buildFormData(initialData));
+  }, [initialData]);
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
+    const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value,
-    }))
-  }
+    }));
+  };
 
   const handleCheckboxChange = (checked) => {
     setFormData((prevData) => ({
       ...prevData,
       available: checked,
-    }))
-  }
+    }));
+  };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
-    )
+    );
   }
 
   return (
     <Card>
       <form
         onSubmit={(e) => {
-          e.preventDefault()
+          e.preventDefault();
           const workingDays =
             typeof formData.workingDays === 'string'
               ? formData.workingDays
                   .split(',')
                   .map((day) => day.trim())
                   .filter(Boolean)
-              : formData.workingDays
-          onSubmit(e, { ...formData, workingDays })
+              : formData.workingDays;
+          onSubmit(e, { ...formData, workingDays });
         }}
       >
         <CardHeader className="bg-muted/50 border-b border-border">
@@ -84,7 +96,8 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
 
             <div className="space-y-2">
               <Label htmlFor="specialty">
-                Specialty / Profession <span className="text-destructive">*</span>
+                Specialty / Profession{' '}
+                <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="specialty"
@@ -136,7 +149,9 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
             <div className="md:col-span-2 space-y-2">
               <Label htmlFor="workingDays">
                 Working Days{' '}
-                <span className="text-muted-foreground font-normal">(Comma separated)</span>
+                <span className="text-muted-foreground font-normal">
+                  (Comma separated)
+                </span>
               </Label>
               <Input
                 id="workingDays"
@@ -196,7 +211,11 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
             </Alert>
           )}
 
-          <Button type="submit" disabled={saving} className="w-full sm:w-auto sm:min-w-[200px]">
+          <Button
+            type="submit"
+            disabled={saving}
+            className="w-full sm:w-auto sm:min-w-50"
+          >
             {saving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -209,7 +228,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
         </CardFooter>
       </form>
     </Card>
-  )
-}
+  );
+};
 
-export default DoctorForm
+export default DoctorForm;

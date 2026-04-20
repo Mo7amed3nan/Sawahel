@@ -7,13 +7,13 @@ import {
   sendWelcomeEmail,
   sendPasswordResetEmail,
   sendResetSuccessEmail,
-} from '../resend/emails.js';
+} from '../nodemailer/emails.js';
 import crypto from 'crypto';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 const ADMIN_ID = 'admin_system';
 
 export const signup = async (req, res) => {
@@ -40,9 +40,11 @@ export const signup = async (req, res) => {
     });
     await user.save();
 
-    generateJWTToken(res, user._id);
-
-    await sendVerificationEmail(verificationToken, email);
+    try {
+      await sendVerificationEmail(verificationToken, email);
+    } catch (emailError) {
+      throw emailError;
+    }
 
     res.status(201).json({
       message: 'User registered successfully. Please verify your email.',
@@ -133,6 +135,7 @@ export const verifyEmail = async (req, res) => {
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
     await user.save();
+    generateJWTToken(res, user._id, user.role || 'user');
     await sendWelcomeEmail(user.email, user.name);
     res.status(200).json({
       message: 'Email verified successfully',

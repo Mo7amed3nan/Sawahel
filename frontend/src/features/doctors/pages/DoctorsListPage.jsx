@@ -136,11 +136,11 @@ export default function DoctorsListPage() {
                 </CardContent>
 
                 {/* Action Buttons */}
-                <CardFooter className="pt-4 border-t border-border gap-2">
+                <CardFooter className="pt-4 border-t border-border gap-2 flex flex-col sm:flex-row">
                   <Button
                     variant="outline"
                     size="lg"
-                    className="flex-1"
+                    className="w-full sm:flex-1"
                     asChild
                   >
                     <Link to={`/doctors/${doctor._id}`}>
@@ -153,7 +153,7 @@ export default function DoctorsListPage() {
                       <Button
                         variant="outline"
                         size="lg"
-                        className="flex-1"
+                        className="w-full sm:flex-1"
                         asChild
                       >
                         <Link to={`/doctors/${doctor._id}/update`}>
@@ -164,7 +164,7 @@ export default function DoctorsListPage() {
                       <Button
                         variant="outline"
                         size="lg"
-                        className="flex-1 text-destructive hover:text-destructive"
+                        className="w-full sm:flex-1 text-destructive hover:text-destructive"
                         onClick={() => handleDelete(doctor._id)}
                       >
                         <Trash2 className="mr-1 h-4 w-4" />

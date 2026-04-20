@@ -29,7 +29,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const { data } = await signupRequest({ name, email, password });
-      set({ user: normalizeUser(data.user), isAuthenticated: true });
+      set({ user: null, isAuthenticated: false });
       return { success: true };
     } catch (error) {
       const message = error.response?.data?.message || 'Signup failed';
@@ -97,8 +97,12 @@ export const useAuthStore = create((set) => ({
         isCheckingAuth: false,
       });
     } catch (error) {
+      const status = error.response?.status;
       set({
-        error: error.response?.data?.message,
+        error:
+          status === 401 || status === 403
+            ? null
+            : error.response?.data?.message,
         isAuthenticated: false,
         user: null,
         isCheckingAuth: false,

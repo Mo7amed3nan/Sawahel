@@ -1,10 +1,22 @@
 import DoctorApplication from '../models/DoctorApplication.js';
+import User from '../models/User.js';
 
 export const applyForDoctor = async (req, res) => {
   try {
     const userId = req.userId;
     if (!userId) {
       return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.role === 'doctor') {
+      return res.status(400).json({
+        message: 'You are already an approved doctor',
+      });
     }
 
     const existingApplication = await DoctorApplication.findOne({ userId });
@@ -38,6 +50,22 @@ export const getApplicationStatus = async (req, res) => {
 
     const application = await DoctorApplication.findOne({ userId });
     if (!application) {
+      const user = await User.findById(userId).select('role updatedAt');
+      if (!user) {
+        return res.status(404).json({ message: 'No application found' });
+      }
+
+      if (user.role === 'doctor') {
+        return res.status(200).json({
+          _id: null,
+          userId,
+          status: 'approved',
+          reason: null,
+          createdAt: user.updatedAt || new Date(),
+          updatedAt: user.updatedAt || new Date(),
+        });
+      }
+
       return res.status(404).json({ message: 'No application found' });
     }
 
