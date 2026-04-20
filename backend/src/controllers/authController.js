@@ -66,9 +66,10 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      generateJWTToken(res, ADMIN_ID, 'admin');
+      const token = generateJWTToken(res, ADMIN_ID, 'admin');
       return res.status(200).json({
         message: 'Login successful',
+        token,
         user: {
           _id: ADMIN_ID,
           name: 'Admin',
@@ -93,9 +94,10 @@ export const login = async (req, res) => {
         .status(400)
         .json({ message: 'Please verify your email before logging in' });
     }
-    generateJWTToken(res, user._id, user.role || 'user');
+    const token = generateJWTToken(res, user._id, user.role || 'user');
     res.status(200).json({
       message: 'Login successful',
+      token,
       user: {
         ...user._doc,
         password: undefined,
@@ -135,10 +137,11 @@ export const verifyEmail = async (req, res) => {
     user.verificationToken = undefined;
     user.verificationTokenExpiresAt = undefined;
     await user.save();
-    generateJWTToken(res, user._id, user.role || 'user');
+    const authToken = generateJWTToken(res, user._id, user.role || 'user');
     await sendWelcomeEmail(user.email, user.name);
     res.status(200).json({
       message: 'Email verified successfully',
+      token: authToken,
       user: { ...user._doc, password: undefined },
     });
   } catch (error) {
