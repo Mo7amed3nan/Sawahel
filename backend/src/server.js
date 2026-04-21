@@ -4,13 +4,13 @@ import dns from 'dns';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import servicesRoutes from './routes/servicesRoutes.js';
 import { connectDB } from './config/db.js';
 import doctorsRoutes from './routes/doctorsRoutes.js';
 import doctorApplicationRoutes from './routes/doctorApplicationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import rateLimiter from './middleware/rateLimiter.js';
 import authRoutes from './routes/authRoutes.js';
+import profileRoutes from './routes/profileRoutes.js';
 
 dotenv.config();
 
@@ -38,11 +38,11 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-app.use('/api/services', servicesRoutes);
 app.use('/api/doctors', doctorsRoutes);
 app.use('/api/doctor-applications', doctorApplicationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/profile', profileRoutes);
 
 await connectDB();
 if (process.env.NODE_ENV !== 'production') {

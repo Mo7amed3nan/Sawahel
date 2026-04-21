@@ -12,9 +12,7 @@ import crypto from 'crypto';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
-const ADMIN_ID = 'admin_system';
+
 
 export const signup = async (req, res) => {
   try {
@@ -65,21 +63,6 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      const token = generateJWTToken(res, ADMIN_ID, 'admin');
-      return res.status(200).json({
-        message: 'Login successful',
-        token,
-        user: {
-          _id: ADMIN_ID,
-          name: 'Admin',
-          email: ADMIN_EMAIL,
-          role: 'admin',
-          isVerified: true,
-        },
-      });
-    }
-
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
@@ -113,11 +96,6 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-  res.clearCookie('token', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  });
   res.status(200).json({ message: 'Logout successful' });
 };
 
@@ -207,19 +185,6 @@ export const resetPassword = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
   try {
-    if (req.role === 'admin') {
-      return res.status(200).json({
-        message: 'Authenticated',
-        user: {
-          _id: req.userId,
-          name: 'Admin',
-          email: ADMIN_EMAIL,
-          role: 'admin',
-          isVerified: true,
-        },
-      });
-    }
-
     const user = await User.findById(req.userId);
     if (!user) {
       return res.status(400).json({ message: 'User not found' });

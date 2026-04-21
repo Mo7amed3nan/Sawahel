@@ -7,28 +7,6 @@ import {
   logoutRequest,
 } from './authApi';
 
-const AUTH_TOKEN_KEY = 'sawahel_auth_token';
-
-const saveAuthToken = (token) => {
-  if (!token) return;
-  localStorage.setItem(AUTH_TOKEN_KEY, token);
-};
-
-const clearAuthToken = () => {
-  localStorage.removeItem(AUTH_TOKEN_KEY);
-};
-
-const normalizeUser = (user) => {
-  if (!user) {
-    return null;
-  }
-
-  return {
-    ...user,
-    role: user.role || 'user',
-  };
-};
-
 export const useAuthStore = create((set) => ({
   user: null,
   isLoading: false,
@@ -55,13 +33,13 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const { data } = await verifyEmailRequest({ token });
-      saveAuthToken(data?.token);
-      set({ user: normalizeUser(data.user), isAuthenticated: true });
+      localStorage.setItem('jwt', data.token);
+      set({ user: data.user, isAuthenticated: true });
       return { success: true };
     } catch (error) {
       const message =
         error.response?.data?.message || 'Email verification failed';
-      clearAuthToken();
+      localStorage.removeItem('jwt');
       set({ error: message, isAuthenticated: false });
       return { success: false, error: message };
     } finally {
@@ -73,13 +51,12 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       const { data } = await loginRequest({ email, password });
-      saveAuthToken(data?.token);
-      const normalizedUser = normalizeUser(data.user);
-      set({ user: normalizedUser, isAuthenticated: true });
-      return { success: true, user: normalizedUser };
+      localStorage.setItem('jwt', data.token);
+      set({ user: data.user, isAuthenticated: true });
+      return { success: true, user: data.user };
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed';
-      clearAuthToken();
+      localStorage.removeItem('jwt');
       set({ error: message, isAuthenticated: false });
       return { success: false, error: message };
     } finally {
@@ -90,8 +67,8 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     set({ isLoading: true, error: null });
     try {
+      localStorage.removeItem('jwt');
       await logoutRequest();
-      clearAuthToken();
       set({ user: null, isAuthenticated: false });
       return { success: true };
     } catch (error) {
@@ -104,28 +81,39 @@ export const useAuthStore = create((set) => ({
   },
 
   checkAuth: async () => {
+    const token = localStorage.getItem('jwt');
+    if (!token) {
+      set({ isAuthenticated: false, user: null, isCheckingAuth: false });
+      return;
+    }
     set({ isCheckingAuth: true, error: null });
     try {
       const { data } = await checkAuthRequest();
       set({
-        user: normalizeUser(data.user),
+        user: data.user,
         isAuthenticated: true,
         isCheckingAuth: false,
       });
     } catch (error) {
       const status = error.response?.status;
       if (status === 401 || status === 403) {
-        clearAuthToken();
+        localStorage.removeItem('jwt');
+        set({
+          isAuthenticated: false,
+          user: null,
+          isCheckingAuth: false,
+          error: 'Session expired. Please log in again.',
+        });
+      } else {
+        set({
+          error: error.response?.data?.message,
+          isAuthenticated: false,
+          user: null,
+          isCheckingAuth: false,
+        });
       }
-      set({
-        error:
-          status === 401 || status === 403
-            ? null
-            : error.response?.data?.message,
-        isAuthenticated: false,
-        user: null,
-        isCheckingAuth: false,
-      });
     }
   },
+
+  clearError: () => set({ error: null }),
 }));

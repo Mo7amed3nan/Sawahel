@@ -220,11 +220,13 @@ export default function AdminDashboardPage() {
                   Approved Applications
                 </h2>
                 <div className="space-y-4">
-                  {approvedApps.map((app) => (
-                    <Card
-                      key={app._id}
-                      className="bg-green-50 dark:bg-green-950"
-                    >
+                  {approvedApps.map((app) => {
+                    if (!app.userId?.name) return null;
+                    return (
+                      <Card
+                        key={app._id}
+                        className="bg-green-50 dark:bg-green-950"
+                      >
                       <CardHeader>
                         <div className="flex justify-between items-start">
                           <div>
@@ -239,7 +241,8 @@ export default function AdminDashboardPage() {
                         </div>
                       </CardHeader>
                     </Card>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}

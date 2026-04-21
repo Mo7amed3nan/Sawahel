@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-const AUTH_TOKEN_KEY = 'sawahel_auth_token';
-
 const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
   headers: {
@@ -11,7 +9,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem(AUTH_TOKEN_KEY);
+  const token = localStorage.getItem('jwt');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

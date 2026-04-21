@@ -1,0 +1,13 @@
+
+
+- in doctors page, i want also to see all the services to be able to deal with as a user but not find apply for a doctor
+- in user page, i want to be able to apply to be a doctor
+
+- loader of authenticating of home page when refresh
+
+
+
+
+- any doctor who saves his info after changing it is not updated on the doctor list unless the admin approve changes on admin dashboard
+
+- rating for each doctor where the user can rate a specific doctor and bio 
