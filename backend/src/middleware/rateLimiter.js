@@ -11,7 +11,9 @@ const getClientIp = (req) => {
 };
 
 const getRateLimitKey = (req) => {
-  const token = req.cookies?.token;
+  const token = req.headers.authorization?.startsWith('Bearer ')?
+    req.headers.authorization.slice(7) : null;
+    
   if (!token) {
     return `ip:${getClientIp(req)}`;
   }

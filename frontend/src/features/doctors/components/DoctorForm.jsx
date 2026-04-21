@@ -1,17 +1,27 @@
-import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, AlertCircle } from 'lucide-react';
+} from '@/components/ui/card'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Loader2, AlertCircle } from 'lucide-react'
+
+const DAYS_OF_WEEK = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+]
 
 const buildFormData = (initialData = {}) => ({
   name: initialData?.name || '',
@@ -20,60 +30,66 @@ const buildFormData = (initialData = {}) => ({
   clinicAddress: initialData?.clinicAddress || '',
   available: initialData?.available || false,
   workingDays: Array.isArray(initialData?.workingDays)
-    ? initialData.workingDays.join(', ')
-    : initialData?.workingDays || '',
-  workingHours: initialData?.workingHours || '',
+    ? initialData.workingDays
+    : [],
+  startTime: initialData?.startTime || '09:00',
+  endTime: initialData?.endTime || '17:00',
   price: initialData?.price || '',
   images: initialData?.images || [],
-});
+})
 
 const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
-  const [formData, setFormData] = useState(buildFormData(initialData));
+  const [formData, setFormData] = useState(buildFormData(initialData))
 
   useEffect(() => {
-    setFormData(buildFormData(initialData));
-  }, [initialData]);
+    setFormData(buildFormData(initialData))
+  }, [initialData])
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, type, checked } = e.target
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === 'checkbox' ? checked : value,
-    }));
-  };
+    }))
+  }
+
+  const handleDayToggle = (day) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      workingDays: prevData.workingDays.includes(day)
+        ? prevData.workingDays.filter((d) => d !== day)
+        : [...prevData.workingDays, day],
+    }))
+  }
 
   const handleCheckboxChange = (checked) => {
     setFormData((prevData) => ({
       ...prevData,
       available: checked,
-    }));
-  };
+    }))
+  }
 
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
-    );
+    )
   }
 
   return (
     <Card>
       <form
         onSubmit={(e) => {
-          e.preventDefault();
-          const workingDays =
-            typeof formData.workingDays === 'string'
-              ? formData.workingDays
-                  .split(',')
-                  .map((day) => day.trim())
-                  .filter(Boolean)
-              : formData.workingDays;
-          onSubmit(e, { ...formData, workingDays });
+          e.preventDefault()
+          onSubmit(e, {
+            ...formData,
+            workingHours: `${formData.startTime} - ${formData.endTime}`,
+          })
         }}
       >
         <CardHeader className="bg-muted/50 border-b border-border">
-          <CardTitle>Contact & Service Information</CardTitle>
+          <CardTitle>Professional Information</CardTitle>
         </CardHeader>
 
         <CardContent className="pt-6 space-y-6">
@@ -91,6 +107,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="e.g. Dr. Ahmed Hassan"
+                className="text-base"
               />
             </div>
 
@@ -106,7 +123,8 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 required
                 value={formData.specialty}
                 onChange={handleChange}
-                placeholder="e.g. Cardiologist, Electrician"
+                placeholder="e.g. Dentist, Physician, etc."
+                className="text-base"
               />
             </div>
           </div>
@@ -120,11 +138,12 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
               <Input
                 id="phone"
                 name="phone"
-                type="text"
+                type="tel"
                 required
                 value={formData.phone}
                 onChange={handleChange}
                 placeholder="01xxxxxxxxx"
+                className="text-base"
               />
             </div>
 
@@ -140,44 +159,61 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 value={formData.clinicAddress}
                 onChange={handleChange}
                 placeholder="e.g. Main Street, Ras Sedr"
+                className="text-base"
               />
             </div>
           </div>
 
-          {/* Working Days & Hours */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="md:col-span-2 space-y-2">
-              <Label htmlFor="workingDays">
-                Working Days{' '}
-                <span className="text-muted-foreground font-normal">
-                  (Comma separated)
-                </span>
-              </Label>
+          {/* Working Days */}
+          <div className="space-y-3">
+            <Label>Working Days</Label>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {DAYS_OF_WEEK.map((day) => (
+                <button
+                  key={day}
+                  type="button"
+                  onClick={() => handleDayToggle(day)}
+                  className={`px-3 py-2 rounded-lg border-2 text-sm font-medium transition-colors ${
+                    formData.workingDays.includes(day)
+                      ? 'border-primary bg-primary text-primary-foreground'
+                      : 'border-border bg-background hover:border-muted-foreground'
+                  }`}
+                >
+                  {day.slice(0, 3)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Working Hours */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="startTime">Opening Time</Label>
               <Input
-                id="workingDays"
-                name="workingDays"
-                type="text"
-                value={formData.workingDays}
+                id="startTime"
+                name="startTime"
+                type="time"
+                value={formData.startTime}
                 onChange={handleChange}
-                placeholder="Sunday, Monday, Tuesday..."
+                className="text-base"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="workingHours">Working Hours</Label>
+              <Label htmlFor="endTime">Closing Time</Label>
               <Input
-                id="workingHours"
-                name="workingHours"
-                type="text"
-                value={formData.workingHours}
+                id="endTime"
+                name="endTime"
+                type="time"
+                value={formData.endTime}
                 onChange={handleChange}
-                placeholder="9 AM - 5 PM"
+                className="text-base"
               />
             </div>
           </div>
 
           {/* Price & Availability */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-end">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="price">Service Fee (EGP)</Label>
               <Input
@@ -187,23 +223,25 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 value={formData.price}
                 onChange={handleChange}
                 placeholder="e.g. 200"
+                className="text-base"
               />
             </div>
 
-            <div className="flex items-center h-10 gap-3 px-4 bg-muted rounded-md border border-input">
-              <Checkbox
-                id="available"
-                checked={formData.available}
-                onCheckedChange={handleCheckboxChange}
-              />
-              <Label htmlFor="available" className="cursor-pointer font-medium">
-                Currently Available / Accepting Clients
-              </Label>
+            <div className="flex items-end h-full">
+              <label className="flex items-center h-10 gap-3 px-4 bg-muted rounded-md border border-input w-full cursor-pointer hover:bg-muted/80 transition-colors">
+                <Checkbox
+                  checked={formData.available}
+                  onCheckedChange={handleCheckboxChange}
+                />
+                <span className="font-medium text-sm">
+                  Currently accepting clients
+                </span>
+              </label>
             </div>
           </div>
         </CardContent>
 
-        <CardFooter className="flex flex-col items-center gap-4 bg-muted/50 border-t border-border">
+        <CardFooter className="flex flex-col gap-4 bg-muted/50 border-t border-border">
           {error && (
             <Alert variant="destructive" className="w-full">
               <AlertCircle className="h-4 w-4" />
@@ -213,8 +251,9 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
 
           <Button
             type="submit"
-            disabled={saving}
-            className="w-full sm:w-auto sm:min-w-50"
+            disabled={saving || !formData.workingDays.length}
+            className="w-full"
+            size="lg"
           >
             {saving ? (
               <>
@@ -225,10 +264,16 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
               'Save Profile'
             )}
           </Button>
+
+          {!formData.workingDays.length && (
+            <p className="text-xs text-muted-foreground text-center">
+              Please select at least one working day
+            </p>
+          )}
         </CardFooter>
       </form>
     </Card>
-  );
-};
+  )
+}
 
-export default DoctorForm;
+export default DoctorForm

@@ -8,11 +8,11 @@ import RoleProtectedRoute from '@/routes/RoleProtectedRoute';
 
 import HomePage from '@/app/pages/HomePage';
 import AboutPage from '@/app/pages/AboutPage';
-import ServicesPage from '@/features/services/pages/ServicesPage';
 
 import LoginPage from '@/features/auth/pages/LoginPage';
 import SignupPage from '@/features/auth/pages/SignupPage';
 import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
+import ProfilePage from '@/features/profile/pages/ProfilePage';
 
 import DoctorManageInfoPage from '@/features/doctors/pages/DoctorManageInfoPage';
 import ApplyForDoctorPage from '@/features/doctors/pages/ApplyForDoctorPage';
@@ -22,7 +22,6 @@ import NotFoundPage from '@/app/pages/NotFoundPage';
 import DoctorsListPage from '@/features/doctors/pages/DoctorsListPage';
 import DoctorsDetailsPage from '@/features/doctors/pages/DoctorsDetailsPage';
 import DoctorsEditPage from '@/features/doctors/pages/DoctorsEditPage';
-
 export default function AppRoutes() {
   return (
     <Routes>
@@ -31,7 +30,10 @@ export default function AppRoutes() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/doctors" element={<DoctorsListPage />} />
         <Route path="/doctors/:id" element={<DoctorsDetailsPage />} />
-        <Route path="/services" element={<ServicesPage />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
       </Route>
 
       <Route element={<AuthLayout />}>
