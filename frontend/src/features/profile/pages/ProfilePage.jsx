@@ -15,6 +15,9 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ArrowLeft, Loader2, AlertCircle, Mail, User, LogOut } from 'lucide-react'
 import { toast } from 'sonner'
+import Loader from '@/components/common/Loader'
+import PageTitle from '@/components/common/PageTitle'
+import { ProfileSkeleton } from '@/components/common/PageSkeletons'
 
 export default function ProfilePage() {
   const navigate = useNavigate()
@@ -73,8 +76,8 @@ export default function ProfilePage() {
 
   if (isCheckingAuth) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh] bg-background">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      <div className="min-h-screen bg-background">
+        <ProfileSkeleton />
       </div>
     )
   }
@@ -85,6 +88,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <PageTitle title="Profile" />
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         {/* Back Button */}
         <Button
@@ -92,7 +96,7 @@ export default function ProfilePage() {
           onClick={() => navigate(-1)}
           className="mb-6"
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-2 h-6 w-6 sm:h-5 sm:w-5" />
           Back
         </Button>
 
@@ -107,7 +111,7 @@ export default function ProfilePage() {
                 </CardDescription>
               </div>
               <div className="bg-primary/10 p-3 rounded-full">
-                <User className="h-6 w-6 text-primary" />
+                <User className="h-7 w-7 text-primary" />
               </div>
             </div>
           </CardHeader>
@@ -190,7 +194,7 @@ export default function ProfilePage() {
 
                   <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
                     <div className="flex items-center gap-3 flex-1">
-                      <Mail className="h-4 w-4 text-muted-foreground" />
+                      <Mail className="h-5 w-5 text-muted-foreground" />
                       <div className="flex-1">
                         <p className="text-sm text-muted-foreground">Email Address</p>
                         <p className="text-foreground font-medium break-all">
@@ -204,9 +208,9 @@ export default function ProfilePage() {
             )}
 
             {/* Account Status */}
-            <Alert className="bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800">
-              <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-              <AlertDescription className="text-blue-900 dark:text-blue-100">
+            <Alert className="bg-info/10 border-info/20">
+              <AlertCircle className="h-5 w-5 text-info" />
+              <AlertDescription className="text-foreground">
                 Account created on{' '}
                 {user?.createdAt
                   ? new Date(user.createdAt).toLocaleDateString()
@@ -238,7 +242,7 @@ export default function ProfilePage() {
                 >
                   {isSaving ? (
                     <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                       Saving...
                     </>
                   ) : (
@@ -260,11 +264,11 @@ export default function ProfilePage() {
                   variant="outline"
                   className="flex-1 text-destructive hover:text-destructive"
                 >
-                  <LogOut className="mr-2 h-4 w-4" />
+                  <LogOut className="mr-2 h-5 w-5" />
                   Logout
                 </Button>
               </>
-            )}
+            ) }
           </CardFooter>
         </Card>
       </div>

@@ -12,16 +12,45 @@ import crypto from 'crypto';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
-
 export const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-    const userAlreadyExist = await User.findOne({ email });
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const userAlreadyExist = await User.findOne({ email: normalizedEmail });
     if (userAlreadyExist) {
+      if (!userAlreadyExist.isVerified) {
+        const isPasswordValid = await bcrypt.compare(
+          password,
+          userAlreadyExist.password
+        );
+
+        if (!isPasswordValid) {
+          return res.status(400).json({
+            message:
+              'Email already registered. Use the correct password to continue verification or login.',
+          });
+        }
+
+        const verificationToken = generateVerificationToken();
+        userAlreadyExist.verificationToken = verificationToken;
+        userAlreadyExist.verificationTokenExpiresAt =
+          Date.now() + 24 * 60 * 60 * 1000;
+        await userAlreadyExist.save();
+
+        await sendVerificationEmail(verificationToken, userAlreadyExist.email);
+
+        return res.status(200).json({
+          message:
+            'Account already exists but is not verified. A new verification code was sent.',
+          requiresVerification: true,
+          email: userAlreadyExist.email,
+        });
+      }
+
       return res
         .status(400)
         .json({ message: 'User already exists with this email' });
@@ -31,7 +60,7 @@ export const signup = async (req, res) => {
     const verificationToken = generateVerificationToken(); // Generate a random 6-digit verification token
     const user = new User({
       name,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       verificationToken,
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, // Token expires in 24 hours
@@ -46,6 +75,8 @@ export const signup = async (req, res) => {
 
     res.status(201).json({
       message: 'User registered successfully. Please verify your email.',
+      requiresVerification: true,
+      email: user.email,
       user: {
         ...user._doc,
         password: undefined,
@@ -57,6 +88,47 @@ export const signup = async (req, res) => {
     res
       .status(500)
       .json({ message: 'Error registering user', error: error.message });
+  }
+};
+
+export const resendVerificationEmail = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const normalizedEmail = email.trim().toLowerCase();
+    const user = await User.findOne({ email: normalizedEmail });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: 'User with this email does not exist' });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({ message: 'Email is already verified' });
+    }
+
+    const verificationToken = generateVerificationToken();
+    user.verificationToken = verificationToken;
+    user.verificationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000;
+    await user.save();
+
+    await sendVerificationEmail(verificationToken, user.email);
+
+    return res.status(200).json({
+      message: 'A new verification code has been sent to your email',
+      requiresVerification: true,
+      email: user.email,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: 'Error resending verification code',
+      error: error.message,
+    });
   }
 };
 

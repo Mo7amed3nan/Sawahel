@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import {
   signupRequest,
   verifyEmailRequest,
+  resendVerificationEmailRequest,
   loginRequest,
   checkAuthRequest,
   logoutRequest,
@@ -13,13 +14,25 @@ export const useAuthStore = create((set) => ({
   error: null,
   isAuthenticated: false,
   isCheckingAuth: true,
+  pendingVerificationEmail: localStorage.getItem('pendingVerificationEmail'),
 
   signup: async (name, email, password) => {
     set({ isLoading: true, error: null });
     try {
       const { data } = await signupRequest({ name, email, password });
-      set({ user: null, isAuthenticated: false });
-      return { success: true };
+      const pendingEmail = data?.email || email;
+      localStorage.setItem('pendingVerificationEmail', pendingEmail);
+      set({
+        user: null,
+        isAuthenticated: false,
+        pendingVerificationEmail: pendingEmail,
+      });
+      return {
+        success: true,
+        requiresVerification: Boolean(data?.requiresVerification),
+        email: pendingEmail,
+        message: data?.message,
+      };
     } catch (error) {
       const message = error.response?.data?.message || 'Signup failed';
       set({ error: message, isAuthenticated: false });
@@ -34,13 +47,49 @@ export const useAuthStore = create((set) => ({
     try {
       const { data } = await verifyEmailRequest({ token });
       localStorage.setItem('jwt', data.token);
-      set({ user: data.user, isAuthenticated: true });
+      localStorage.removeItem('pendingVerificationEmail');
+      set({
+        user: data.user,
+        isAuthenticated: true,
+        pendingVerificationEmail: null,
+      });
       return { success: true };
     } catch (error) {
       const message =
         error.response?.data?.message || 'Email verification failed';
       localStorage.removeItem('jwt');
       set({ error: message, isAuthenticated: false });
+      return { success: false, error: message };
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  resendVerificationEmail: async (email) => {
+    set({ isLoading: true, error: null });
+    try {
+      const fallbackEmail = localStorage.getItem('pendingVerificationEmail');
+      const targetEmail = (email || fallbackEmail || '').trim().toLowerCase();
+
+      if (!targetEmail) {
+        const message = 'Please provide your email first';
+        set({ error: message });
+        return { success: false, error: message };
+      }
+
+      const { data } = await resendVerificationEmailRequest({
+        email: targetEmail,
+      });
+      localStorage.setItem('pendingVerificationEmail', targetEmail);
+      set({ pendingVerificationEmail: targetEmail });
+      return {
+        success: true,
+        message: data?.message,
+      };
+    } catch (error) {
+      const message =
+        error.response?.data?.message || 'Failed to resend verification email';
+      set({ error: message });
       return { success: false, error: message };
     } finally {
       set({ isLoading: false });

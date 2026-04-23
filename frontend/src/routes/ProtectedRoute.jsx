@@ -7,7 +7,7 @@ export default function ProtectedRoute() {
   const location = useLocation();
 
   if (isCheckingAuth) {
-    return <Loader />;
+    return <Loader variant="section" message="Checking access..." />;
   }
 
   if (!isAuthenticated) {

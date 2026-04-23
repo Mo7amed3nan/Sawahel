@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuthStore } from '@/features/auth/authStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
   Stethoscope,
-  Truck,
   ShoppingCart,
   Navigation,
   ArrowRight,
@@ -14,13 +13,17 @@ import {
   Users,
   Clock,
   CheckCircle,
+  Settings,
+  User,
+  ShieldCheck,
 } from 'lucide-react'
+import PageTitle from '@/components/common/PageTitle'
 
 const services = [
   {
     id: 1,
     name: 'Doctors & Clinics',
-    description: 'Find medical professionals, book appointments, and get healthcare',
+    description: 'Find medical professionals and get healthcare',
     icon: Stethoscope,
     isActive: true,
     href: '/doctors',
@@ -30,7 +33,7 @@ const services = [
   {
     id: 2,
     name: 'Delivery & Shopping',
-    description: 'Order from local shops and get fast delivery to your door',
+    description: 'Order from local shops and get fast delivery',
     icon: ShoppingCart,
     isActive: false,
     href: '#',
@@ -40,7 +43,7 @@ const services = [
   {
     id: 3,
     name: 'Transportation',
-    description: 'Find buses, taxis, and car rental services around the city',
+    description: 'Find buses, taxis, and car rental services',
     icon: Navigation,
     isActive: false,
     href: '#',
@@ -49,60 +52,60 @@ const services = [
   },
 ]
 
-// Unauthenticated Home
+// Unauthenticated Home — landing page
 function UnauthenticatedHome() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30">
-      {/* Hero Section */}
+      <PageTitle title="Welcome" />
+      {/* Hero */}
       <section className="px-4 py-16 sm:py-24">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-full mb-6 border border-primary/20">
-            <Waves className="h-4 w-4 text-primary" />
+            <Waves className="h-5 w-5 text-primary" />
             <span className="text-sm font-medium text-primary">Welcome to Sawahel</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-foreground mb-6">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground mb-6">
             Everything You Need in{' '}
             <span className="bg-gradient-to-r from-primary to-primary/50 bg-clip-text text-transparent">
               Ras Sedr
             </span>
           </h1>
 
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
-            Your one-stop platform for local services. From healthcare to shopping, all in one
-            place. Join thousands of satisfied users today.
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8 leading-relaxed max-w-2xl mx-auto">
+            Your one-stop platform for local services — healthcare, shopping, and more.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="group">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button asChild size="lg" className="group h-12 sm:h-11 text-base">
               <Link to="/signup">
                 Get Started Free
-                <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button asChild variant="outline" size="lg" className="h-12 sm:h-11 text-base">
               <Link to="/doctors">Browse Doctors</Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="px-4 py-12 border-y border-border">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-12">
+      {/* Stats */}
+      <section className="px-4 py-10 border-y border-border">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {[
               { icon: Users, label: 'Active Users', value: '100+' },
               { icon: Stethoscope, label: 'Doctors', value: '10+' },
-              { icon: Clock, label: 'Hours Available', value: '24/7' },
+              { icon: Clock, label: 'Availability', value: '24/7' },
               { icon: CheckCircle, label: 'Verified', value: '100%' },
             ].map((stat, i) => {
               const Icon = stat.icon
               return (
                 <div key={i} className="text-center">
-                  <Icon className="h-8 w-8 text-primary mx-auto mb-2" />
+                  <Icon className="h-7 w-7 sm:h-8 sm:w-8 text-primary mx-auto mb-2" />
                   <div className="text-2xl sm:text-3xl font-bold text-foreground">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">{stat.label}</div>
                 </div>
               )
             })}
@@ -110,40 +113,30 @@ function UnauthenticatedHome() {
         </div>
       </section>
 
-      {/* Services Section */}
+      {/* Services */}
       <section className="px-4 py-16">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Explore Services
-            </h2>
-            <p className="text-muted-foreground text-lg">
-              Browse our available services in Ras Sedr
-            </p>
-          </div>
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground text-center mb-10">
+            Explore Services
+          </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {services.map((service) => {
               const Icon = service.icon
-
               if (!service.isActive) {
                 return (
-                  <Card key={service.id} className="opacity-60 bg-muted/50">
-                    <CardHeader>
-                      <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}>
+                  <Card key={service.id} className="opacity-50">
+                    <CardHeader className="pb-3">
+                      <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-3`}>
                         <Icon className={`h-6 w-6 ${service.iconColor}`} />
                       </div>
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <CardTitle className="text-lg text-muted-foreground">
-                            {service.name}
-                          </CardTitle>
-                        </div>
-                        <Badge variant="secondary">Coming Soon</Badge>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="text-base text-muted-foreground">{service.name}</CardTitle>
+                        <Badge variant="secondary" className="text-xs">Soon</Badge>
                       </div>
                     </CardHeader>
-                    <CardContent>
-                      <CardDescription>{service.description}</CardDescription>
+                    <CardContent className="pt-0">
+                      <CardDescription className="text-sm">{service.description}</CardDescription>
                     </CardContent>
                   </Card>
                 )
@@ -151,25 +144,16 @@ function UnauthenticatedHome() {
 
               return (
                 <Link key={service.id} to={service.href} className="block group">
-                  <Card className="h-full transition-all hover:shadow-lg hover:border-primary">
-                    <CardHeader>
-                      <div
-                        className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}
-                      >
+                  <Card className="h-full transition-all hover:shadow-md hover:border-primary/50">
+                    <CardHeader className="pb-3">
+                      <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-3`}>
                         <Icon className={`h-6 w-6 ${service.iconColor}`} />
                       </div>
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                        {service.name}
-                      </CardTitle>
+                      <CardTitle className="text-base group-hover:text-primary transition-colors">{service.name}</CardTitle>
                     </CardHeader>
-                    <CardContent className="flex-grow">
-                      <CardDescription>{service.description}</CardDescription>
+                    <CardContent className="pt-0">
+                      <CardDescription className="text-sm">{service.description}</CardDescription>
                     </CardContent>
-                    <div className="px-6 pb-6">
-                      <span className="text-sm font-medium text-primary inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                        Explore <ArrowRight className="h-4 w-4" />
-                      </span>
-                    </div>
                   </Card>
                 </Link>
               )
@@ -178,18 +162,18 @@ function UnauthenticatedHome() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="px-4 py-16 bg-primary/5">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Get Started?</h2>
-          <p className="text-muted-foreground mb-8">
+      {/* CTA */}
+      <section className="px-4 py-14 bg-primary/5">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-3">Ready to Get Started?</h2>
+          <p className="text-muted-foreground mb-6">
             Join Sawahel today and connect with the best services in Ras Sedr
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg">
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Button asChild size="lg" className="h-12 sm:h-11">
               <Link to="/signup">Create Account</Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button asChild variant="outline" size="lg" className="h-12 sm:h-11">
               <Link to="/login">Sign In</Link>
             </Button>
           </div>
@@ -199,108 +183,74 @@ function UnauthenticatedHome() {
   )
 }
 
-// Authenticated User Home
+// Authenticated User Home — clean & simple
 function UserHome() {
-  
   return (
     <div className="min-h-screen bg-background">
-      {/* Welcome Section */}
-      <section className="px-4 py-16 bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">Welcome Back!</h1>
-          <p className="text-muted-foreground text-lg">
-            Browse services and connect with professionals in Ras Sedr
-          </p>
-        </div>
-      </section>
+      <PageTitle title="Home" />
+      <section className="px-4 py-10 sm:py-14">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">Welcome Back 👋</h1>
+          <p className="text-muted-foreground mb-8">What would you like to do today?</p>
 
-      {/* Quick Actions */}
-      <section className="px-4 py-12">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-foreground mb-6">Quick Access</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link to="/doctors" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
-                      <Stethoscope className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <CardTitle>Find a Doctor</CardTitle>
-                      <CardDescription>Browse healthcare professionals</CardDescription>
-                    </div>
+          {/* Primary Action */}
+          <Link to="/doctors" className="block mb-6">
+            <Card className="hover:shadow-md transition-shadow bg-gradient-to-r from-primary/5 to-transparent border-primary/20 hover:border-primary/40">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-4">
+                  <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-xl">
+                    <Stethoscope className="h-7 w-7 text-blue-600 dark:text-blue-400" />
                   </div>
-                </CardHeader>
+                  <div className="flex-1">
+                    <CardTitle className="text-lg">Find a Doctor</CardTitle>
+                    <CardDescription>Browse healthcare professionals in Ras Sedr</CardDescription>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          {/* Secondary Actions */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            <Link to="/apply-for-doctor" className="block">
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardContent className="flex items-center gap-3 py-4">
+                  <div className="bg-green-50 dark:bg-green-950 p-2.5 rounded-lg">
+                    <Stethoscope className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span className="text-sm font-medium">Become a Doctor</span>
+                </CardContent>
               </Card>
             </Link>
-
-            <Link to="/apply-for-doctor" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="bg-green-50 dark:bg-green-950 p-3 rounded-lg">
-                      <Stethoscope className="h-6 w-6 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <CardTitle>Become a Doctor</CardTitle>
-                      <CardDescription>Join our professional network</CardDescription>
-                    </div>
+            <Link to="/profile" className="block">
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardContent className="flex items-center gap-3 py-4">
+                  <div className="bg-purple-50 dark:bg-purple-950 p-2.5 rounded-lg">
+                    <User className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                </CardHeader>
+                  <span className="text-sm font-medium">My Profile</span>
+                </CardContent>
               </Card>
             </Link>
           </div>
-        </div>
-      </section>
 
-      {/* Services Grid */}
-      <section className="px-4 py-12">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-foreground mb-6">Available Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {services.map((service) => {
+          {/* Coming Soon Services */}
+          <h2 className="text-lg font-semibold text-foreground mb-4">Coming Soon</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {services.filter(s => !s.isActive).map((service) => {
               const Icon = service.icon
-
-              if (!service.isActive) {
-                return (
-                  <Card key={service.id} className="opacity-60 bg-muted/50">
-                    <CardHeader>
-                      <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}>
-                        <Icon className={`h-6 w-6 ${service.iconColor}`} />
-                      </div>
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-lg text-muted-foreground">
-                          {service.name}
-                        </CardTitle>
-                        <Badge variant="secondary">Coming Soon</Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription>{service.description}</CardDescription>
-                    </CardContent>
-                  </Card>
-                )
-              }
-
               return (
-                <Link key={service.id} to={service.href} className="block group">
-                  <Card className="h-full transition-all hover:shadow-lg hover:border-primary">
-                    <CardHeader>
-                      <div
-                        className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}
-                      >
-                        <Icon className={`h-6 w-6 ${service.iconColor}`} />
-                      </div>
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                        {service.name}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                      <CardDescription>{service.description}</CardDescription>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <Card key={service.id} className="opacity-50">
+                  <CardContent className="flex items-center gap-3 py-4">
+                    <div className={`${service.color} p-2 rounded-lg`}>
+                      <Icon className={`h-5 w-5 ${service.iconColor}`} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground">{service.name}</p>
+                    </div>
+                  </CardContent>
+                </Card>
               )
             })}
           </div>
@@ -310,132 +260,75 @@ function UserHome() {
   )
 }
 
-// Doctor Home
+// Doctor Home — focused on managing practice
 function DoctorHome() {
   return (
     <div className="min-h-screen bg-background">
-      {/* Welcome Section */}
-      <section className="px-4 py-16 bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">
-            Welcome, Doctor!
-          </h1>
-          <p className="text-muted-foreground text-lg">Manage your profile and view patient interactions</p>
-        </div>
-      </section>
+      <PageTitle title="Doctor Dashboard" />
+      <section className="px-4 py-10 sm:py-14">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">Doctor Dashboard 🩺</h1>
+          <p className="text-muted-foreground mb-8">Manage your practice and connect with patients</p>
 
-      {/* Quick Stats & Actions */}
-      <section className="px-4 py-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {/* Primary Action */}
+          <Link to="/doctor/manage-info" className="block mb-6">
+            <Card className="hover:shadow-md transition-shadow bg-gradient-to-r from-primary/5 to-transparent border-primary/20 hover:border-primary/40">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-4">
+                  <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-xl">
+                    <Settings className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-lg">Manage Profile</CardTitle>
+                    <CardDescription>Update your details, schedule, and availability</CardDescription>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          {/* Quick Links */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+            <Link to="/doctors" className="block">
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardContent className="flex items-center gap-3 py-4">
+                  <div className="bg-green-50 dark:bg-green-950 p-2.5 rounded-lg">
+                    <Stethoscope className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span className="text-sm font-medium">View Directory</span>
+                </CardContent>
+              </Card>
+            </Link>
+            <Link to="/profile" className="block">
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardContent className="flex items-center gap-3 py-4">
+                  <div className="bg-purple-50 dark:bg-purple-950 p-2.5 rounded-lg">
+                    <User className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                  </div>
+                  <span className="text-sm font-medium">My Account</span>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+
+          {/* Stats preview */}
+          <h2 className="text-lg font-semibold text-foreground mb-4">Quick Stats</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { label: 'Profile Views', value: '0', icon: '👁️' },
-              { label: 'Appointments', value: '0', icon: '📅' },
-              { label: 'Patients', value: '0', icon: '👥' },
-              { label: 'Rating', value: '5', icon: '⭐' },
+              { label: 'Views', value: '0', emoji: '👁️' },
+              { label: 'Appointments', value: '0', emoji: '📅' },
+              { label: 'Patients', value: '0', emoji: '👥' },
+              { label: 'Rating', value: '5.0', emoji: '⭐' },
             ].map((stat, i) => (
               <Card key={i}>
-                <CardContent className="pt-6">
-                  <div className="text-3xl mb-2">{stat.icon}</div>
-                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <CardContent className="py-4 text-center">
+                  <div className="text-2xl mb-1">{stat.emoji}</div>
+                  <div className="text-xl font-bold text-foreground">{stat.value}</div>
+                  <div className="text-xs text-muted-foreground">{stat.label}</div>
                 </CardContent>
               </Card>
             ))}
-          </div>
-
-          <h2 className="text-2xl font-bold text-foreground mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link to="/doctor/manage-info" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
-                      <Stethoscope className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <CardTitle>Manage Profile</CardTitle>
-                      <CardDescription>Update your details and schedule</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
-            </Link>
-
-            <Link to="/profile" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="bg-purple-50 dark:bg-purple-950 p-3 rounded-lg">
-                      <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                    </div>
-                    <div>
-                      <CardTitle>My Account</CardTitle>
-                      <CardDescription>View your profile settings</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Available Services */}
-      <section className="px-4 py-12 border-t border-border">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl font-bold text-foreground mb-6">Browse Other Services</h2>
-          <p className="text-muted-foreground mb-8">As a healthcare professional, explore other services available on Sawahel</p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {services.map((service) => {
-              const Icon = service.icon
-
-              if (!service.isActive) {
-                return (
-                  <Card key={service.id} className="opacity-60 bg-muted/50">
-                    <CardHeader>
-                      <div className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}>
-                        <Icon className={`h-6 w-6 ${service.iconColor}`} />
-                      </div>
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="text-lg text-muted-foreground">
-                          {service.name}
-                        </CardTitle>
-                        <Badge variant="secondary">Coming Soon</Badge>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription>{service.description}</CardDescription>
-                    </CardContent>
-                  </Card>
-                )
-              }
-
-              return (
-                <Link key={service.id} to={service.href} className="block group">
-                  <Card className="h-full transition-all hover:shadow-lg hover:border-primary">
-                    <CardHeader>
-                      <div
-                        className={`w-12 h-12 rounded-lg ${service.color} flex items-center justify-center mb-4`}
-                      >
-                        <Icon className={`h-6 w-6 ${service.iconColor}`} />
-                      </div>
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                        {service.name}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow">
-                      <CardDescription>{service.description}</CardDescription>
-                    </CardContent>
-                    <div className="px-6 pb-6">
-                      <span className="text-sm font-medium text-primary inline-flex items-center gap-1 group-hover:gap-2 transition-all">
-                        Explore <ArrowRight className="h-4 w-4" />
-                      </span>
-                    </div>
-                  </Card>
-                </Link>
-              )
-            })}
           </div>
         </div>
       </section>
@@ -443,70 +336,54 @@ function DoctorHome() {
   )
 }
 
-// Admin Home
+// Admin Home — management focused
 function AdminHome() {
-  
   return (
     <div className="min-h-screen bg-background">
-      {/* Welcome Section */}
-      <section className="px-4 py-16 bg-gradient-to-r from-primary/10 to-primary/5 border-b border-border">
-        <div className="max-w-5xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground text-lg">Manage platform content and users</p>
-        </div>
-      </section>
+      <PageTitle title="Admin Panel" />
+      <section className="px-4 py-10 sm:py-14">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-1">Admin Panel 🛡️</h1>
+          <p className="text-muted-foreground mb-8">Manage the platform and review applications</p>
 
-      {/* Admin Stats */}
-      <section className="px-4 py-12">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {[
-              { label: 'Total Users', value: '10', color: 'bg-blue-50 dark:bg-blue-950' },
-              { label: 'Doctors', value: '4', color: 'bg-green-50 dark:bg-green-950' },
-              { label: 'Pending Reports', value: '-', color: 'bg-yellow-50 dark:bg-yellow-950' },
-              { label: 'Platform Health', value: '100%', color: 'bg-purple-50 dark:bg-purple-950' },
-            ].map((stat, i) => (
-              <Card key={i}>
-                <CardContent className="pt-6">
-                  <div className={`w-12 h-12 rounded-lg ${stat.color} mb-3`} />
-                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+          {/* Primary Action */}
+          <Link to="/admin/dashboard" className="block mb-6">
+            <Card className="hover:shadow-md transition-shadow bg-gradient-to-r from-primary/5 to-transparent border-primary/20 hover:border-primary/40">
+              <CardHeader className="pb-3">
+                <div className="flex items-center gap-4">
+                  <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-xl">
+                    <ShieldCheck className="h-7 w-7 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div className="flex-1">
+                    <CardTitle className="text-lg">Doctor Applications</CardTitle>
+                    <CardDescription>Review and manage pending applications</CardDescription>
+                  </div>
+                  <ArrowRight className="h-5 w-5 text-muted-foreground" />
+                </div>
+              </CardHeader>
+            </Card>
+          </Link>
+
+          {/* Secondary Actions */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link to="/doctors" className="block">
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardContent className="flex items-center gap-3 py-4">
+                  <div className="bg-green-50 dark:bg-green-950 p-2.5 rounded-lg">
+                    <Stethoscope className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  </div>
+                  <span className="text-sm font-medium">Manage Doctors</span>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-
-          <h2 className="text-2xl font-bold text-foreground mb-6">Admin Tools</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <Link to="/admin/users" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg">
-                      <Users className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <div>
-                      <CardTitle>Manage Users</CardTitle>
-                      <CardDescription>View and manage user accounts</CardDescription>
-                    </div>
-                  </div>
-                </CardHeader>
-              </Card>
             </Link>
-
-            <Link to="/doctors" className="block">
-              <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="bg-green-50 dark:bg-green-950 p-3 rounded-lg">
-                      <Stethoscope className="h-6 w-6 text-green-600 dark:text-green-400" />
-                    </div>
-                    <div>
-                      <CardTitle>Manage Doctors</CardTitle>
-                      <CardDescription>Approve and verify professionals</CardDescription>
-                    </div>
+            <Link to="/profile" className="block">
+              <Card className="h-full hover:shadow-md transition-shadow">
+                <CardContent className="flex items-center gap-3 py-4">
+                  <div className="bg-purple-50 dark:bg-purple-950 p-2.5 rounded-lg">
+                    <User className="h-5 w-5 text-purple-600 dark:text-purple-400" />
                   </div>
-                </CardHeader>
+                  <span className="text-sm font-medium">My Account</span>
+                </CardContent>
               </Card>
             </Link>
           </div>
@@ -518,7 +395,7 @@ function AdminHome() {
 
 
 export default function HomePage() {
-  const { user, isAuthenticated, isCheckingAuth } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {

@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useDoctorsStore } from '@/features/doctors/doctorsStore'
 import DoctorForm from '../components/DoctorForm'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
+import { ArrowLeft, AlertCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { DoctorDetailsSkeleton } from '@/components/common/PageSkeletons'
 
 export default function DoctorsEditPage() {
   const navigate = useNavigate()
@@ -53,11 +54,8 @@ export default function DoctorsEditPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-          <p className="text-muted-foreground">Loading professional details...</p>
-        </div>
+      <div className="min-h-screen bg-background">
+        <DoctorDetailsSkeleton />
       </div>
     )
   }
@@ -67,7 +65,7 @@ export default function DoctorsEditPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         {/* Back Button */}
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-6 sm:mb-8">
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-2 h-6 w-6 sm:h-5 sm:w-5" />
           Back
         </Button>
 
@@ -83,7 +81,7 @@ export default function DoctorsEditPage() {
 
         {error && !isLoading && (
           <Alert variant="destructive" className="mb-6">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="h-5 w-5" />
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}

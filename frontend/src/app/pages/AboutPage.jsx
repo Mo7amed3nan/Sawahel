@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Waves, Users, MapPin, Heart } from 'lucide-react';
+import PageTitle from '@/components/common/PageTitle';
 
 const values = [
   {
@@ -31,6 +32,7 @@ const values = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-background">
+      <PageTitle title="About" />
       <section className="px-6 py-20 text-center border-b border-border">
         <div className="max-w-2xl mx-auto">
           <div className="flex justify-center mb-6">
@@ -62,7 +64,7 @@ export default function AboutPage() {
                 <CardHeader>
                   <div className="flex justify-center mb-2">
                     <div className="bg-primary/10 p-3 rounded-lg">
-                      <Icon className="h-6 w-6 text-primary" />
+                      <Icon className="h-7 w-7 text-primary" />
                     </div>
                   </div>
                   <CardTitle className="text-lg">{value.title}</CardTitle>

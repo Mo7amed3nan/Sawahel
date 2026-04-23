@@ -1,82 +1,56 @@
+import { Waves, ExternalLink, Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Waves } from 'lucide-react';
 
 export default function Footer() {
   return (
     <footer className="bg-background border-t border-border mt-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="md:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <Waves className="h-6 w-6 text-primary" />
-              <span className="font-bold text-xl tracking-tight text-foreground">
-                Sawahel
-              </span>
-            </Link>
-            <p className="text-muted-foreground text-sm max-w-sm leading-relaxed">
-              Your all-in-one digital guide for Ras Sedr. Connecting the
-              community with trusted local professionals and services.
-            </p>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        {/* Main Content */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6">
+          {/* Brand */}
+          <div className="flex items-center gap-2">
+            <Waves className="h-6 w-6 text-primary" />
+            <span className="font-bold text-lg tracking-tight text-foreground">
+              Sawahel
+            </span>
           </div>
 
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">Explore</h4>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link
-                  to="/"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/about"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/services"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Service Directory
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="font-semibold text-foreground mb-4">
-              Professionals
-            </h4>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <Link
-                  to="/doctor/manage-info"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Manage Doctor Profile
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/signup"
-                  className="text-muted-foreground hover:text-primary transition-colors"
-                >
-                  Create Account
-                </Link>
-              </li>
-            </ul>
+          {/* Links */}
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm">
+            <a
+              href="https://forms.google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Feedback & Report Issues
+            </a>
+            <a
+              href="https://www.linkedin.com/in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+              </svg>
+              LinkedIn
+            </a>
+            <a
+              href="mailto:contact@sawahel.com"
+              className="text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1.5"
+            >
+              <Mail className="h-3.5 w-3.5" />
+              Contact
+            </a>
           </div>
         </div>
 
-        <div className="border-t border-border mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
+        {/* Bottom Line */}
+        <div className="border-t border-border mt-6 pt-6 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-muted-foreground">
           <p>&copy; {new Date().getFullYear()} Sawahel. All rights reserved.</p>
-          <p>Built for Ras Sedr, Egypt.</p>
+          <p>Built for Ras Sedr, Egypt</p>
         </div>
       </div>
     </footer>

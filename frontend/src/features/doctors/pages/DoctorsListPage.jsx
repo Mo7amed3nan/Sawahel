@@ -10,16 +10,19 @@ import {
   CardHeader,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   ArrowLeft,
-  Loader2,
-  AlertCircle,
   Eye,
   Pencil,
   Trash2,
+  Users,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import Loader from '@/components/common/Loader'
+import ErrorState from '@/components/common/ErrorState'
+import EmptyState from '@/components/common/EmptyState'
+import PageTitle from '@/components/common/PageTitle'
+import { DoctorsListSkeleton } from '@/components/common/PageSkeletons'
 
 export default function DoctorsListPage() {
   const { doctors, isLoading, error, loadDoctors, removeDoctor } =
@@ -53,6 +56,7 @@ export default function DoctorsListPage() {
 
   return (
     <div className="min-h-screen bg-background">
+      <PageTitle title="Doctors" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         {/* Header */}
         <div className="mb-8 sm:mb-10 border-b border-border pb-6">
@@ -61,7 +65,7 @@ export default function DoctorsListPage() {
             onClick={() => navigate(-1)}
             className="mb-4 sm:mb-6"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="mr-2 h-6 w-6 sm:h-5 sm:w-5" />
             Back
           </Button>
 
@@ -74,34 +78,24 @@ export default function DoctorsListPage() {
         </div>
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="flex justify-center items-center min-h-[40vh]">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-          </div>
-        )}
+        {isLoading && <DoctorsListSkeleton />}
 
         {/* Error State */}
         {!isLoading && error && (
-          <div className="max-w-3xl mx-auto">
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          </div>
+          <ErrorState
+            title="Failed to load professionals"
+            message={error}
+            onRetry={() => loadDoctors()}
+          />
         )}
 
         {/* Empty State */}
         {!isLoading && !error && doctors.length === 0 && (
-          <Card className="text-center py-12 sm:py-20 border-dashed">
-            <CardContent className="space-y-3">
-              <p className="text-muted-foreground text-lg font-medium">
-                No professionals listed yet
-              </p>
-              <p className="text-muted-foreground text-sm">
-                Be the first to list a service in Ras Sedr!
-              </p>
-            </CardContent>
-          </Card>
+          <EmptyState
+            icon={Users}
+            title="No professionals listed yet"
+            description="Be the first to list a service in Ras Sedr!"
+          />
         )}
 
         {/* Grid of Doctor Cards */}
@@ -113,10 +107,10 @@ export default function DoctorsListPage() {
                 className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow"
               >
                 {/* Cover Banner */}
-                <div className="h-20 sm:h-24 bg-primary relative">
+                <div className="h-20 sm:h-24 bg-gradient-to-r from-primary to-primary/70 relative">
                   {/* Avatar */}
                   <div className="absolute -bottom-6 left-4 sm:left-6 h-14 w-14 sm:h-16 sm:w-16 bg-background rounded-full p-1 border-3 border-background shadow-md">
-                    <div className="h-full w-full bg-muted rounded-full flex items-center justify-center text-muted-foreground text-lg sm:text-2xl font-bold">
+                    <div className="h-full w-full bg-primary rounded-full flex items-center justify-center text-primary-foreground text-lg sm:text-2xl font-bold">
                       {doctor.name.charAt(0).toUpperCase()}
                     </div>
                   </div>
@@ -153,8 +147,8 @@ export default function DoctorsListPage() {
                     asChild
                   >
                     <Link to={`/doctors/${doctor._id}`}>
-                      <Eye className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                      <span className=" sm:inline">View</span>
+                      <Eye className="mr-1.5 h-5 w-5" />
+                      <span>View</span>
                     </Link>
                   </Button>
 
@@ -167,8 +161,8 @@ export default function DoctorsListPage() {
                         asChild
                       >
                         <Link to={`/doctors/${doctor._id}/update`}>
-                          <Pencil className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                          <span className=" sm:inline">Edit</span>
+                          <Pencil className="mr-1.5 h-5 w-5" />
+                          <span>Edit</span>
                         </Link>
                       </Button>
 
@@ -178,8 +172,8 @@ export default function DoctorsListPage() {
                         className="flex-1 min-w-[80px] text-destructive hover:text-destructive"
                         onClick={() => handleDelete(doctor._id, doctor.name)}
                       >
-                        <Trash2 className="mr-1 h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                        <span className=" sm:inline">Delete</span>
+                        <Trash2 className="mr-1.5 h-5 w-5" />
+                        <span>Delete</span>
                       </Button>
                     </>
                   )}

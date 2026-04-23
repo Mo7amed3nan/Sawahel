@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Home, AlertCircle } from 'lucide-react';
+import PageTitle from '@/components/common/PageTitle';
 
 export default function NotFoundPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-6">
+      <PageTitle title="Page Not Found" />
       <div className="text-center max-w-md">
         <div className="flex justify-center mb-6">
           <div className="bg-muted p-4 rounded-full">
@@ -22,7 +24,7 @@ export default function NotFoundPage() {
 
         <Button asChild size="lg">
           <Link to="/">
-            <Home className="mr-2 h-4 w-4" />
+            <Home className="mr-2 h-5 w-5" />
             Back to Home
           </Link>
         </Button>
