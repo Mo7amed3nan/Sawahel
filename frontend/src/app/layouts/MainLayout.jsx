@@ -6,7 +6,7 @@ export default function MainLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow page-enter">
         <Outlet />
       </main>
       <Footer />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useDoctorsStore } from '@/features/doctors/doctorsStore';
@@ -10,7 +10,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { AlertCircle, CheckCircle2, Clock } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle, CheckCircle2, Clock, Loader2 } from 'lucide-react';
+import Loader from '@/components/common/Loader';
+import { ApplyDoctorSkeleton } from '@/components/common/PageSkeletons';
 
 export default function ApplyForDoctorPage() {
   const navigate = useNavigate();
@@ -47,8 +50,8 @@ export default function ApplyForDoctorPage() {
 
   if (isCheckingApplication) {
     return (
-      <div className="min-h-[40vh] flex items-center justify-center text-muted-foreground">
-        Loading...
+      <div className="min-h-screen bg-background">
+        <ApplyDoctorSkeleton />
       </div>
     );
   }
@@ -67,7 +70,9 @@ export default function ApplyForDoctorPage() {
               <div className="flex items-start gap-4">
                 {applicationStatus.status === 'pending' && (
                   <>
-                    <Clock className="h-6 w-6 text-yellow-500 mt-1" />
+                    <div className="rounded-full bg-warning/10 p-2 mt-0.5">
+                      <Clock className="h-6 w-6 text-warning" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-lg">Pending Review</h3>
                       <p className="text-muted-foreground mt-1">
@@ -80,7 +85,9 @@ export default function ApplyForDoctorPage() {
 
                 {applicationStatus.status === 'approved' && (
                   <>
-                    <CheckCircle2 className="h-6 w-6 text-green-500 mt-1" />
+                    <div className="rounded-full bg-success/10 p-2 mt-0.5">
+                      <CheckCircle2 className="h-6 w-6 text-success" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-lg">
                         Application Approved
@@ -100,7 +107,9 @@ export default function ApplyForDoctorPage() {
 
                 {applicationStatus.status === 'rejected' && (
                   <>
-                    <AlertCircle className="h-6 w-6 text-red-500 mt-1" />
+                    <div className="rounded-full bg-destructive/10 p-2 mt-0.5">
+                      <AlertCircle className="h-6 w-6 text-destructive" />
+                    </div>
                     <div>
                       <h3 className="font-semibold text-lg">
                         Application Rejected
@@ -165,13 +174,14 @@ export default function ApplyForDoctorPage() {
               </ul>
             </div>
 
-            <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-              <p className="text-sm text-blue-900 dark:text-blue-100">
+            <Alert className="bg-info/10 border-info/20">
+              <AlertCircle className="h-5 w-5 text-info" />
+              <AlertDescription className="text-foreground">
                 <strong>Note:</strong> After approval, you'll be able to create
                 and manage your doctor profile with clinic details, specialties,
                 and availability.
-              </p>
-            </div>
+              </AlertDescription>
+            </Alert>
 
             <Button
               onClick={handleApply}
@@ -179,7 +189,14 @@ export default function ApplyForDoctorPage() {
               size="lg"
               className="w-full"
             >
-              {isSubmittingApplication ? 'Submitting...' : 'Submit Application'}
+              {isSubmittingApplication ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Application'
+              )}
             </Button>
 
             <Button

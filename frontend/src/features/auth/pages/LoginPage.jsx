@@ -13,8 +13,9 @@ import {
 } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useAuthStore } from '@/features/auth/authStore'
-import { AlertCircle, Eye, EyeOff, Loader2 } from 'lucide-react'
+import { AlertCircle, Eye, EyeOff, Loader2, Waves } from 'lucide-react'
 import { toast } from 'sonner'
+import PageTitle from '@/components/common/PageTitle'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -54,7 +55,6 @@ export default function LoginPage() {
 
     const result = await login(email, password)
     if (!result?.success) {
-      // Check if it's an authorization error (401/403)
       if (result?.statusCode === 401 || result?.statusCode === 403) {
         toast.error('Invalid email or password')
       } else if (result?.statusCode === 0) {
@@ -67,7 +67,6 @@ export default function LoginPage() {
 
     toast.success('Login successful!')
 
-    // Redirect to intended page or dashboard
     const fromPath = location.state?.from?.pathname
     const fallbackPath = result?.user?.role === 'admin' ? '/admin/dashboard' : '/'
     navigate(fromPath || fallbackPath, { replace: true })
@@ -77,17 +76,23 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8">
+      <PageTitle title="Login" />
       <Card className="w-full max-w-md">
-        <CardHeader className="text-center space-y-2">
-          <CardTitle className="text-3xl">Welcome back</CardTitle>
+        <CardHeader className="text-center space-y-3 pb-2">
+          <div className="flex justify-center">
+            <div className="bg-primary/10 p-3 rounded-full">
+              <Waves className="h-7 w-7 text-primary" />
+            </div>
+          </div>
+          <CardTitle className="text-2xl sm:text-3xl">Welcome back</CardTitle>
           <CardDescription>Login to access your account</CardDescription>
         </CardHeader>
 
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5 pt-4">
             {error && (
               <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="h-5 w-5" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
@@ -104,7 +109,7 @@ export default function LoginPage() {
                 required
                 autoComplete="email"
                 disabled={isLoading}
-                className="text-base"
+                className="text-base h-11 sm:h-10"
               />
             </div>
 
@@ -129,35 +134,35 @@ export default function LoginPage() {
                   required
                   autoComplete="current-password"
                   disabled={isLoading}
-                  className="pr-10 text-base"
+                  className="pr-12 text-base h-11 sm:h-10"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((p) => !p)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   tabIndex={-1}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
+                    <EyeOff className="h-5 w-5 sm:h-5 sm:w-5" />
                   ) : (
-                    <Eye className="h-4 w-4" />
+                    <Eye className="h-5 w-5 sm:h-5 sm:w-5" />
                   )}
                 </button>
               </div>
             </div>
           </CardContent>
 
-          <CardFooter className="flex flex-col gap-4">
+          <CardFooter className="flex flex-col gap-4 pt-2">
             <Button
               type="submit"
-              className="w-full text-base"
+              className="w-full text-base h-12 sm:h-11"
               disabled={isButtonDisabled}
               size="lg"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Logging in...
                 </>
               ) : (
@@ -165,18 +170,15 @@ export default function LoginPage() {
               )}
             </Button>
 
-            <div className="text-sm text-muted-foreground text-center space-y-2">
-              <p>
-                Don't have an account?{' '}
-                <Link to="/signup" className="font-medium text-primary hover:underline">
-                  Sign up here
-                </Link>
-              </p>
-            </div>
+            <p className="text-sm text-muted-foreground text-center">
+              Don't have an account?{' '}
+              <Link to="/signup" className="font-medium text-primary hover:underline">
+                Sign up here
+              </Link>
+            </p>
           </CardFooter>
         </form>
       </Card>
     </main>
   )
 }
-   

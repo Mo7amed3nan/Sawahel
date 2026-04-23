@@ -12,6 +12,7 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Loader2, AlertCircle } from 'lucide-react'
+import { DoctorFormSkeleton } from '@/components/common/PageSkeletons'
 
 const DAYS_OF_WEEK = [
   'Monday',
@@ -70,11 +71,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
   }
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
+    return <DoctorFormSkeleton />
   }
 
   return (
@@ -244,7 +241,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
         <CardFooter className="flex flex-col gap-4 bg-muted/50 border-t border-border">
           {error && (
             <Alert variant="destructive" className="w-full">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="h-5 w-5" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
@@ -257,7 +254,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
           >
             {saving ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                 Saving...
               </>
             ) : (

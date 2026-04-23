@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/features/auth/authStore';
@@ -11,7 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { CheckCircle2, XCircle, Clock, LogOut, ArrowLeft } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { CheckCircle2, XCircle, Clock, LogOut, ArrowLeft, Loader2 } from 'lucide-react';
+import Loader from '@/components/common/Loader';
+import ErrorState from '@/components/common/ErrorState';
+import { AdminDashboardSkeleton } from '@/components/common/PageSkeletons';
 
 export default function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -19,6 +23,7 @@ export default function AdminDashboardPage() {
   const {
     applications,
     isLoading,
+    error,
     processingId,
     loadApplications,
     approveDoctorApplication,
@@ -86,10 +91,10 @@ export default function AdminDashboardPage() {
     <div className="min-h-screen bg-background">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div className="flex items-center gap-3">
             <Button variant="ghost" onClick={() => navigate('/')}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <ArrowLeft className="h-6 w-6 sm:h-5 sm:w-5 mr-2" />
               Back Home
             </Button>
             <div>
@@ -102,15 +107,19 @@ export default function AdminDashboardPage() {
             </div>
           </div>
           <Button variant="outline" onClick={handleLogout}>
-            <LogOut className="h-4 w-4 mr-2" />
+            <LogOut className="h-6 w-6 sm:h-5 sm:w-5 mr-2" />
             Logout
           </Button>
         </div>
 
         {isLoading ? (
-          <div className="text-center text-muted-foreground py-12">
-            Loading applications...
-          </div>
+          <AdminDashboardSkeleton />
+        ) : error ? (
+          <ErrorState
+            title="Failed to load applications"
+            message={error}
+            onRetry={() => loadApplications()}
+          />
         ) : (
           <>
             {/* Statistics */}
@@ -118,7 +127,7 @@ export default function AdminDashboardPage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <Clock className="h-4 w-4 text-yellow-500" />
+                    <Clock className="h-5 w-5 text-warning" />
                     Pending
                   </CardTitle>
                 </CardHeader>
@@ -130,7 +139,7 @@ export default function AdminDashboardPage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    <CheckCircle2 className="h-5 w-5 text-success" />
                     Approved
                   </CardTitle>
                 </CardHeader>
@@ -144,7 +153,7 @@ export default function AdminDashboardPage() {
               <Card>
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2 text-base">
-                    <XCircle className="h-4 w-4 text-red-500" />
+                    <XCircle className="h-5 w-5 text-destructive" />
                     Rejected
                   </CardTitle>
                 </CardHeader>
@@ -159,7 +168,7 @@ export default function AdminDashboardPage() {
             {/* Pending Applications */}
             <div className="mb-12">
               <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                <Clock className="h-6 w-6 text-yellow-500" />
+                <Clock className="h-6 w-6 text-warning" />
                 Pending Applications
               </h2>
 
@@ -191,18 +200,28 @@ export default function AdminDashboardPage() {
                             disabled={processingId === app._id}
                             className="bg-green-600 hover:bg-green-700"
                           >
-                            {processingId === app._id
-                              ? 'Approving...'
-                              : 'Approve'}
+                            {processingId === app._id ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Approving...
+                              </>
+                            ) : (
+                              'Approve'
+                            )}
                           </Button>
                           <Button
                             onClick={() => handleReject(app._id)}
                             disabled={processingId === app._id}
                             variant="destructive"
                           >
-                            {processingId === app._id
-                              ? 'Rejecting...'
-                              : 'Reject'}
+                            {processingId === app._id ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Rejecting...
+                              </>
+                            ) : (
+                              'Reject'
+                            )}
                           </Button>
                         </div>
                       </CardContent>
@@ -216,7 +235,7 @@ export default function AdminDashboardPage() {
             {approvedApps.length > 0 && (
               <div className="mb-12">
                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                  <CheckCircle2 className="h-6 w-6 text-green-500" />
+                  <CheckCircle2 className="h-6 w-6 text-success" />
                   Approved Applications
                 </h2>
                 <div className="space-y-4">
@@ -225,7 +244,7 @@ export default function AdminDashboardPage() {
                     return (
                       <Card
                         key={app._id}
-                        className="bg-green-50 dark:bg-green-950"
+                        className="bg-success/5 border-success/20"
                       >
                       <CardHeader>
                         <div className="flex justify-between items-start">
@@ -235,9 +254,9 @@ export default function AdminDashboardPage() {
                               {app.userId?.email}
                             </CardDescription>
                           </div>
-                          <span className="text-sm text-green-700 dark:text-green-300">
+                          <Badge variant="outline" className="text-success border-success/30">
                             Approved
-                          </span>
+                          </Badge>
                         </div>
                       </CardHeader>
                     </Card>
@@ -251,12 +270,12 @@ export default function AdminDashboardPage() {
             {rejectedApps.length > 0 && (
               <div>
                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                  <XCircle className="h-6 w-6 text-red-500" />
+                  <XCircle className="h-6 w-6 text-destructive" />
                   Rejected Applications
                 </h2>
                 <div className="space-y-4">
                   {rejectedApps.map((app) => (
-                    <Card key={app._id} className="bg-red-50 dark:bg-red-950">
+                    <Card key={app._id} className="bg-destructive/5 border-destructive/20">
                       <CardHeader>
                         <div className="flex justify-between items-start">
                           <div>
@@ -265,9 +284,9 @@ export default function AdminDashboardPage() {
                               {app.userId?.email}
                             </CardDescription>
                           </div>
-                          <span className="text-sm text-red-700 dark:text-red-300">
+                          <Badge variant="outline" className="text-destructive border-destructive/30">
                             Rejected
-                          </span>
+                          </Badge>
                         </div>
                         {app.reason && (
                           <p className="text-sm mt-2 text-muted-foreground">

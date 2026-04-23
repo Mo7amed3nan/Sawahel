@@ -4,7 +4,6 @@ import { useDoctorsStore } from '@/features/doctors/doctorsStore'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import {
   ArrowLeft,
   Phone,
@@ -12,13 +11,13 @@ import {
   Clock,
   Calendar,
   Banknote,
-  Loader2,
-  AlertCircle,
   Copy,
   Check,
   MessageCircle,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import { DoctorDetailsSkeleton } from '@/components/common/PageSkeletons'
+import ErrorState from '@/components/common/ErrorState'
 
 export default function DoctorsDetailsPage() {
   const { selectedDoctor, isLoading, error, loadDoctorById } =
@@ -74,8 +73,8 @@ export default function DoctorsDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[60vh] bg-background">
-        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+      <div className="min-h-screen bg-background">
+        <DoctorDetailsSkeleton />
       </div>
     )
   }
@@ -89,15 +88,14 @@ export default function DoctorsDetailsPage() {
             onClick={() => navigate(-1)}
             className="mb-6"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
+            <ArrowLeft className="mr-2 h-6 w-6 sm:h-5 sm:w-5" />
             Back
           </Button>
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              {error || 'Failed to load professional details'}
-            </AlertDescription>
-          </Alert>
+          <ErrorState
+            title="Failed to load profile"
+            message={error || 'This professional profile could not be found.'}
+            onRetry={() => loadDoctorById(doctorId)}
+          />
         </div>
       </div>
     )
@@ -117,7 +115,7 @@ export default function DoctorsDetailsPage() {
           onClick={() => navigate(-1)}
           className="mb-6"
         >
-          <ArrowLeft className="mr-2 h-4 w-4" />
+          <ArrowLeft className="mr-2 h-6 w-6 sm:h-5 sm:w-5" />
           Back to Directory
         </Button>
 
@@ -131,7 +129,7 @@ export default function DoctorsDetailsPage() {
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end -mt-12 sm:-mt-16 mb-8 gap-4">
               {/* Avatar */}
               <div className="h-20 w-20 sm:h-28 sm:w-28 bg-background rounded-full p-1 border-4 border-background shadow-lg shrink-0">
-                <div className="h-full w-full bg-primary rounded-full flex items-center justify-center text-muted-foreground text-3xl sm:text-4xl font-bold">
+                <div className="h-full w-full bg-primary rounded-full flex items-center justify-center text-primary-foreground text-3xl sm:text-4xl font-bold">
                   {doctorData.name.charAt(0).toUpperCase()}
                 </div>
               </div>
@@ -143,7 +141,7 @@ export default function DoctorsDetailsPage() {
                   className="gap-2 px-3 py-1.5 text-sm"
                 >
                   <span
-                    className={`h-2 w-2 rounded-full ${doctorData.available ? 'bg-green-400' : 'bg-red-400'}`}
+                    className={`h-2.5 w-2.5 rounded-full ${doctorData.available ? 'bg-green-400' : 'bg-red-400'}`}
                   />
                   {doctorData.available ? 'Accepting Clients' : 'Unavailable'}
                 </Badge>
@@ -175,7 +173,7 @@ export default function DoctorsDetailsPage() {
                   </p>
                   <div className="flex flex-col sm:flex-row gap-2">
                     <div className="flex-1 flex items-center gap-2 px-3 py-2 bg-muted rounded-lg border border-border">
-                      <Phone className="h-4 w-4 text-muted-foreground shrink-0" />
+                      <Phone className="h-5 w-5 text-muted-foreground shrink-0" />
                       <a
                         href={`tel:${doctorData.phone}`}
                         className="text-foreground font-medium hover:text-primary transition-colors break-all"
@@ -191,12 +189,12 @@ export default function DoctorsDetailsPage() {
                     >
                       {copiedPhone ? (
                         <>
-                          <Check className="h-4 w-4 mr-1" />
+                          <Check className="h-5 w-5 mr-1" />
                           Copied
                         </>
                       ) : (
                         <>
-                          <Copy className="h-4 w-4 mr-1" />
+                          <Copy className="h-5 w-5 mr-1" />
                           Copy
                         </>
                       )}
@@ -224,7 +222,7 @@ export default function DoctorsDetailsPage() {
                     className="w-full bg-green-600 hover:bg-green-700 text-white"
                     size="lg"
                   >
-                    <MessageCircle className="h-4 w-4 mr-2" />
+                    <MessageCircle className="h-5 w-5 mr-2" />
                     Message on WhatsApp
                   </Button>
                 )}
