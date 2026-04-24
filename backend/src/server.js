@@ -8,6 +8,7 @@ import { connectDB } from './config/db.js';
 import doctorsRoutes from './routes/doctorsRoutes.js';
 import doctorApplicationRoutes from './routes/doctorApplicationRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import ratingsRoutes from './routes/ratingsRoutes.js';
 import rateLimiter from './middleware/rateLimiter.js';
 import authRoutes from './routes/authRoutes.js';
 import profileRoutes from './routes/profileRoutes.js';
@@ -43,6 +44,7 @@ app.use('/api/doctor-applications', doctorApplicationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/ratings', ratingsRoutes);
 
 await connectDB();
 if (process.env.NODE_ENV !== 'production') {

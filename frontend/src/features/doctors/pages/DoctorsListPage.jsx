@@ -23,6 +23,7 @@ import ErrorState from '@/components/common/ErrorState'
 import EmptyState from '@/components/common/EmptyState'
 import PageTitle from '@/components/common/PageTitle'
 import { DoctorsListSkeleton } from '@/components/common/PageSkeletons'
+import StarRating from '@/features/doctors/components/StarRating'
 
 export default function DoctorsListPage() {
   const { doctors, isLoading, error, loadDoctors, removeDoctor } =
@@ -126,7 +127,16 @@ export default function DoctorsListPage() {
                   </p>
                 </CardHeader>
 
-                <CardContent className="pt-0 pb-3 flex-grow">
+                <CardContent className="pt-0 pb-3 flex-grow space-y-2">
+                  {/* Rating */}
+                  <StarRating
+                    value={doctor.averageRating || 0}
+                    count={doctor.totalRatings || 0}
+                    size="sm"
+                    showValue
+                  />
+
+                  {/* Availability Badge */}
                   <Badge
                     variant={doctor.available ? 'default' : 'secondary'}
                     className="gap-1.5 text-xs sm:text-sm"

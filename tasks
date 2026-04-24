@@ -1,10 +1,8 @@
-- improve the refresh or waiting spinner when refresh and checking auth or waiting for fetch, to be better ui and consistent allover the app
-- availabitity button for each doctor and doctor being manually updating it problem
+- rating for each doctor where the user can rate a specific doctor and bio for each doctor and make the whatsapp number different from the phone number and add section in doctor info for additional info and images and the location of clinic is a google map location and also add other features in doctor info to handle more things
 
-
+- the whats app number is different from the phone number 
 
 -- not now
 
 - set up post hog
 - any doctor who saves his info after changing it is not updated on the doctor list unless the admin approve changes on admin dashboard
-- rating for each doctor where the user can rate a specific doctor and bio 

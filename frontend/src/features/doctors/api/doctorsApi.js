@@ -34,3 +34,13 @@ export const getApplicationStatus = async () => {
   const response = await api.get('/doctor-applications/status');
   return response;
 };
+
+export const rateDoctor = async (doctorId, rating) => {
+  const response = await api.post(`/ratings/${doctorId}`, { rating });
+  return response;
+};
+
+export const getDoctorRatings = async (doctorId) => {
+  const response = await api.get(`/ratings/${doctorId}`);
+  return response;
+};

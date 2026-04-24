@@ -37,50 +37,87 @@ export function DoctorsListSkeleton() {
 }
 
 /**
- * Skeleton for the Doctor Details page — mimics the profile card.
+ * Skeleton for the Doctor Details page — mimics the profile card and tabs.
  */
 export function DoctorDetailsSkeleton() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
       <Skeleton className="h-9 w-40 mb-6 rounded-md" />
 
-      <Card className="overflow-hidden">
+      {/* Profile Header Card Skeleton */}
+      <Card className="overflow-hidden mb-8">
         {/* Cover */}
         <Skeleton className="h-24 sm:h-32 md:h-40 rounded-none" />
 
-        <CardContent className="pt-0 pb-8 sm:pb-12 px-4 sm:px-6 lg:px-8">
+        <CardContent className="pt-0 pb-6 px-4 sm:px-6 lg:px-8">
           {/* Avatar + badge row */}
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end -mt-12 sm:-mt-16 mb-8 gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end -mt-12 sm:-mt-16 mb-4 gap-4">
             <Skeleton className="h-20 w-20 sm:h-28 sm:w-28 rounded-full" />
             <Skeleton className="h-8 w-36 rounded-full" />
           </div>
 
-          {/* Name & specialty */}
-          <div className="mb-8 sm:mb-10 border-b border-border pb-6 sm:pb-8">
+          {/* Name & specialty & rating */}
+          <div>
             <Skeleton className="h-8 w-64 mb-2" />
             <Skeleton className="h-5 w-40" />
+            <div className="mt-4 flex items-center gap-4">
+              <Skeleton className="h-5 w-28" />
+              <div className="hidden sm:block h-5 w-px bg-muted"></div>
+              <Skeleton className="h-5 w-48" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Tabs navigation skeleton */}
+      <div className="grid w-full grid-cols-3 mb-8 h-12 gap-1 p-1 bg-muted/60 rounded-md">
+        <Skeleton className="h-full w-full rounded-sm bg-background/50" />
+        <Skeleton className="h-full w-full rounded-sm" />
+        <Skeleton className="h-full w-full rounded-sm" />
+      </div>
+
+      {/* Tab content area skeleton */}
+      <Card>
+        <CardContent className="p-6 sm:p-8 space-y-8">
+          {/* Section 1 (Bio) */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-5 rounded-full" />
+              <Skeleton className="h-6 w-32" />
+            </div>
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-[95%]" />
+              <Skeleton className="h-4 w-[80%]" />
+              <Skeleton className="h-4 w-[60%]" />
+            </div>
           </div>
 
-          {/* Info grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="flex items-start gap-3">
-                <Skeleton className="h-10 w-10 rounded-lg shrink-0" />
-                <div className="flex-1">
-                  <Skeleton className="h-3 w-20 mb-2" />
+          {/* Section 2 (Grid) */}
+          <div className="space-y-4 pt-4 border-t border-border">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-5 w-5 rounded-full" />
+              <Skeleton className="h-6 w-40" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-muted/30 p-5 rounded-xl border border-border">
+              <div className="flex items-start gap-3">
+                <Skeleton className="h-5 w-5 mt-1 shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3 w-20" />
+                  <div className="flex gap-2">
+                    <Skeleton className="h-6 w-12 rounded-full" />
+                    <Skeleton className="h-6 w-12 rounded-full" />
+                    <Skeleton className="h-6 w-12 rounded-full" />
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Skeleton className="h-5 w-5 mt-1 shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3 w-20" />
                   <Skeleton className="h-5 w-32" />
                 </div>
               </div>
-            ))}
-          </div>
-
-          {/* Working days */}
-          <div>
-            <Skeleton className="h-5 w-32 mb-3" />
-            <div className="flex gap-2">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <Skeleton key={i} className="h-8 w-16 rounded-full" />
-              ))}
             </div>
           </div>
         </CardContent>
