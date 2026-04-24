@@ -24,6 +24,22 @@ const doctorSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    bio: {
+      type: String,
+      default: '',
+    },
+    whatsappNumber: {
+      type: String,
+      default: '',
+    },
+    googleMapsUrl: {
+      type: String,
+      default: '',
+    },
+    additionalInfo: {
+      type: String,
+      default: '',
+    },
     available: {
       type: Boolean,
       default: false,
@@ -53,6 +69,14 @@ const doctorSchema = new mongoose.Schema(
         type: String,
       },
     ],
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+    totalRatings: {
+      type: Number,
+      default: 0,
+    },
     extra: {
       type: Map,
       of: mongoose.Schema.Types.Mixed,

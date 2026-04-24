@@ -7,6 +7,8 @@ import {
   deleteDoctor,
   applyForDoctor,
   getApplicationStatus,
+  rateDoctor as rateDoctorApi,
+  getDoctorRatings,
 } from '@/features/doctors/api/doctorsApi';
 
 export const useDoctorsStore = create((set, get) => ({
@@ -14,9 +16,12 @@ export const useDoctorsStore = create((set, get) => ({
   selectedDoctor: null,
   myDoctor: null,
   applicationStatus: null,
+  doctorRatings: { averageRating: 0, totalRatings: 0, userRating: null },
   isLoading: false,
   isCheckingApplication: false,
   isSubmittingApplication: false,
+  isLoadingRatings: false,
+  isSubmittingRating: false,
   error: null,
 
   loadDoctors: async () => {
@@ -175,6 +180,36 @@ export const useDoctorsStore = create((set, get) => ({
         error: error.response?.data?.message || 'Failed to submit application',
         isSubmittingApplication: false,
       });
+      throw error;
+    }
+  },
+
+  loadDoctorRatings: async (doctorId) => {
+    set({ isLoadingRatings: true });
+    try {
+      const response = await getDoctorRatings(doctorId);
+      set({
+        doctorRatings: response.data || { averageRating: 0, totalRatings: 0, userRating: null },
+        isLoadingRatings: false,
+      });
+      return response.data;
+    } catch (error) {
+      set({ isLoadingRatings: false });
+      return null;
+    }
+  },
+
+  submitRating: async (doctorId, rating) => {
+    set({ isSubmittingRating: true });
+    try {
+      const response = await rateDoctorApi(doctorId, rating);
+      set({
+        doctorRatings: response.data || get().doctorRatings,
+        isSubmittingRating: false,
+      });
+      return response.data;
+    } catch (error) {
+      set({ isSubmittingRating: false });
       throw error;
     }
   },

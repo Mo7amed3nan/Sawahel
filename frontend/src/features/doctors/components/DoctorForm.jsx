@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { Loader2, AlertCircle, Plus, X, ImagePlus } from 'lucide-react'
 import { DoctorFormSkeleton } from '@/components/common/PageSkeletons'
 
 const DAYS_OF_WEEK = [
@@ -28,7 +28,11 @@ const buildFormData = (initialData = {}) => ({
   name: initialData?.name || '',
   specialty: initialData?.specialty || '',
   phone: initialData?.phone || '',
+  whatsappNumber: initialData?.whatsappNumber || '',
   clinicAddress: initialData?.clinicAddress || '',
+  googleMapsUrl: initialData?.googleMapsUrl || '',
+  bio: initialData?.bio || '',
+  additionalInfo: initialData?.additionalInfo || '',
   available: initialData?.available || false,
   workingDays: Array.isArray(initialData?.workingDays)
     ? initialData.workingDays
@@ -36,11 +40,12 @@ const buildFormData = (initialData = {}) => ({
   startTime: initialData?.startTime || '09:00',
   endTime: initialData?.endTime || '17:00',
   price: initialData?.price || '',
-  images: initialData?.images || [],
+  images: Array.isArray(initialData?.images) ? initialData.images : [],
 })
 
 const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
   const [formData, setFormData] = useState(buildFormData(initialData))
+  const [newImageUrl, setNewImageUrl] = useState('')
 
   useEffect(() => {
     setFormData(buildFormData(initialData))
@@ -67,6 +72,23 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
     setFormData((prevData) => ({
       ...prevData,
       available: checked,
+    }))
+  }
+
+  const handleAddImage = () => {
+    const url = newImageUrl.trim()
+    if (!url) return
+    setFormData((prevData) => ({
+      ...prevData,
+      images: [...prevData.images, url],
+    }))
+    setNewImageUrl('')
+  }
+
+  const handleRemoveImage = (index) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: prevData.images.filter((_, i) => i !== index),
     }))
   }
 
@@ -126,7 +148,21 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
             </div>
           </div>
 
-          {/* Phone & Address */}
+          {/* Bio */}
+          <div className="space-y-2">
+            <Label htmlFor="bio">Bio / About</Label>
+            <textarea
+              id="bio"
+              name="bio"
+              value={formData.bio}
+              onChange={handleChange}
+              placeholder="Write a brief introduction about yourself, your experience, qualifications, etc."
+              className="flex min-h-[100px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+              rows={4}
+            />
+          </div>
+
+          {/* Phone & WhatsApp */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="phone">
@@ -145,6 +181,22 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
             </div>
 
             <div className="space-y-2">
+              <Label htmlFor="whatsappNumber">WhatsApp Number</Label>
+              <Input
+                id="whatsappNumber"
+                name="whatsappNumber"
+                type="tel"
+                value={formData.whatsappNumber}
+                onChange={handleChange}
+                placeholder="01xxxxxxxxx (leave empty to use phone number)"
+                className="text-base"
+              />
+            </div>
+          </div>
+
+          {/* Address & Google Maps */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
               <Label htmlFor="clinicAddress">
                 Location / Address <span className="text-destructive">*</span>
               </Label>
@@ -156,6 +208,19 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 value={formData.clinicAddress}
                 onChange={handleChange}
                 placeholder="e.g. Main Street, Ras Sedr"
+                className="text-base"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="googleMapsUrl">Google Maps Link</Label>
+              <Input
+                id="googleMapsUrl"
+                name="googleMapsUrl"
+                type="url"
+                value={formData.googleMapsUrl}
+                onChange={handleChange}
+                placeholder="Paste your Google Maps link here"
                 className="text-base"
               />
             </div>
@@ -234,6 +299,86 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                   Currently accepting clients
                 </span>
               </label>
+            </div>
+          </div>
+
+          {/* Additional Info */}
+          <div className="space-y-2">
+            <Label htmlFor="additionalInfo">Additional Information</Label>
+            <textarea
+              id="additionalInfo"
+              name="additionalInfo"
+              value={formData.additionalInfo}
+              onChange={handleChange}
+              placeholder="Services offered, languages spoken, special equipment, certifications, etc."
+              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
+              rows={3}
+            />
+          </div>
+
+          {/* Images */}
+          <div className="space-y-3">
+            <Label>Images</Label>
+            <p className="text-sm text-muted-foreground -mt-1">
+              Add image URLs to showcase your clinic, equipment, or
+              certifications.
+            </p>
+
+            {/* Existing images */}
+            {formData.images.length > 0 && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {formData.images.map((url, index) => (
+                  <div
+                    key={index}
+                    className="group relative rounded-lg overflow-hidden border border-border bg-muted"
+                  >
+                    <img
+                      src={url}
+                      alt={`Image ${index + 1}`}
+                      className="w-full h-32 object-cover"
+                      onError={(e) => {
+                        e.target.src = ''
+                        e.target.alt = 'Failed to load'
+                        e.target.className =
+                          'w-full h-32 flex items-center justify-center bg-muted text-muted-foreground text-sm'
+                      }}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-2 right-2 p-1 rounded-full bg-background/80 text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add image input */}
+            <div className="flex gap-2">
+              <Input
+                type="url"
+                value={newImageUrl}
+                onChange={(e) => setNewImageUrl(e.target.value)}
+                placeholder="Paste image URL..."
+                className="text-base flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    handleAddImage()
+                  }
+                }}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={handleAddImage}
+                disabled={!newImageUrl.trim()}
+              >
+                <Plus className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </CardContent>

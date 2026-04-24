@@ -98,3 +98,6 @@ export default function DoctorsEditPage() {
     </div>
   )
 }
+
+
+// how to open ai in this project in antigravity: 
