@@ -173,16 +173,19 @@ export default function DoctorsDetailsPage() {
         </Button>
 
         {/* Profile Header Card */}
-        <Card className="overflow-hidden mb-8">
+        <Card className="overflow-hidden mb-8 border-border/50 bg-card/80 backdrop-blur-sm shadow-sm relative">
           {/* Cover */}
-          <div className="h-24 sm:h-32 md:h-40 bg-gradient-to-r from-primary to-primary/70" />
+          <div className="h-24 sm:h-32 md:h-40 bg-gradient-to-r from-primary to-blue-900 relative overflow-hidden">
+             {/* Decorative faint overlay */}
+             <div className="absolute inset-0 bg-black/10 mix-blend-overlay"></div>
+          </div>
 
-          <CardContent className="pt-0 pb-6 px-4 sm:px-6 lg:px-8">
+          <CardContent className="pt-0 pb-6 px-4 sm:px-6 lg:px-8 relative z-10">
             {/* Header Section */}
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end -mt-12 sm:-mt-16 mb-4 gap-4">
               {/* Avatar */}
-              <div className="h-20 w-20 sm:h-28 sm:w-28 bg-background rounded-full p-1 border-4 border-background shadow-lg shrink-0">
-                <div className="h-full w-full bg-primary rounded-full flex items-center justify-center text-primary-foreground text-3xl sm:text-4xl font-bold">
+              <div className="h-20 w-20 sm:h-28 sm:w-28 bg-background rounded-2xl p-1 shadow-lg shrink-0 border border-border/50 transform rotate-1">
+                <div className="h-full w-full bg-primary/10 text-primary rounded-xl flex items-center justify-center text-3xl sm:text-4xl font-bold">
                   {doctorData.name.charAt(0).toUpperCase()}
                 </div>
               </div>

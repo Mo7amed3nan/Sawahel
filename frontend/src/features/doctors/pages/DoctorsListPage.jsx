@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/features/auth/authStore'
 import { useDoctorsStore } from '@/features/doctors/doctorsStore'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Card,
   CardContent,
@@ -16,6 +17,7 @@ import {
   Pencil,
   Trash2,
   Users,
+  Search,
 } from 'lucide-react'
 import { toast } from 'sonner'
 import Loader from '@/components/common/Loader'
@@ -31,6 +33,7 @@ export default function DoctorsListPage() {
   const navigate = useNavigate()
   const { user } = useAuthStore()
   const isAdmin = user?.role === 'admin'
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     const loadDoctorsData = async () => {
@@ -54,28 +57,49 @@ export default function DoctorsListPage() {
       toast.error(err?.message || 'Failed to delete profile')
     }
   }
+  
+  const filteredDoctors = doctors.filter((doc) => {
+    const q = searchQuery.toLowerCase()
+    return (
+      doc.name.toLowerCase().includes(q) ||
+      doc.specialty?.toLowerCase().includes(q)
+    )
+  })
 
   return (
     <div className="min-h-screen bg-background">
       <PageTitle title="Doctors" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
         {/* Header */}
-        <div className="mb-8 sm:mb-10 border-b border-border pb-6">
+        <div className="mb-6 sm:mb-8 pb-6 border-b border-border/60">
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            className="mb-4 sm:mb-6"
+            className="mb-4 sm:mb-6 border border-border/50 shadow-sm"
           >
-            <ArrowLeft className="mr-2 h-6 w-6 sm:h-5 sm:w-5" />
-            Back
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            <span className="font-medium">Back</span>
           </Button>
 
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground mb-2">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground mb-3">
             Service Directory
           </h1>
-          <p className="text-muted-foreground text-base sm:text-lg">
+          <p className="text-muted-foreground text-base sm:text-lg mb-6">
             Browse and connect with registered professionals in Ras Sedr
           </p>
+
+          <div className="relative max-w-md">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-muted-foreground" />
+            </div>
+            <Input
+              type="text"
+              placeholder="Search by name or specialty..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 h-12 bg-background/50 backdrop-blur-sm border-border/80 shadow-sm text-base rounded-2xl focus-visible:ring-primary"
+            />
+          </div>
         </div>
 
         {/* Loading State */}
@@ -98,80 +122,100 @@ export default function DoctorsListPage() {
             description="Be the first to list a service in Ras Sedr!"
           />
         )}
+        
+        {/* Search Empty State */}
+        {!isLoading && !error && doctors.length > 0 && filteredDoctors.length === 0 && (
+          <EmptyState
+            icon={Search}
+            title="No matches found"
+            description={`No professionals matching "${searchQuery}"`}
+          />
+        )}
 
         {/* Grid of Doctor Cards */}
-        {!isLoading && !error && doctors.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {doctors.map((doctor) => (
+        {!isLoading && !error && filteredDoctors.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+            {filteredDoctors.map((doctor) => (
               <Card
                 key={doctor._id}
-                className="flex flex-col overflow-hidden hover:shadow-lg transition-shadow"
+                className="group flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 border-border/50 bg-card/80 backdrop-blur-sm relative"
               >
+                {/* Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
                 {/* Cover Banner */}
-                <div className="h-20 sm:h-24 bg-gradient-to-r from-primary to-primary/70 relative">
+                <div className="h-24 sm:h-32 md:h-40 bg-gradient-to-r from-primary to-blue-900 relative">
                   {/* Avatar */}
-                  <div className="absolute -bottom-6 left-4 sm:left-6 h-14 w-14 sm:h-16 sm:w-16 bg-background rounded-full p-1 border-3 border-background shadow-md">
-                    <div className="h-full w-full bg-primary rounded-full flex items-center justify-center text-primary-foreground text-lg sm:text-2xl font-bold">
+                  <div className="absolute -bottom-6 left-5 h-16 w-16 bg-background rounded-2xl p-1 shadow-md transform transition-transform group-hover:scale-105 group-hover:-rotate-3 border border-border/50">
+                    <div className="h-full w-full bg-primary/10 text-primary rounded-xl flex items-center justify-center text-xl font-bold">
                       {doctor.name.charAt(0).toUpperCase()}
                     </div>
                   </div>
                 </div>
 
                 {/* Card Body */}
-                <CardHeader className="pt-10 pb-3 sm:pb-4">
-                  <h3 className="text-lg sm:text-xl font-bold text-foreground truncate">
+                <CardHeader className="pt-10 pb-3 sm:pb-4 relative z-10">
+                  <h3 className="text-lg sm:text-xl font-bold text-foreground truncate group-hover:text-primary transition-colors">
                     {doctor.name}
                   </h3>
-                  <p className="text-sm sm:text-base font-semibold text-primary truncate">
+                  <p className="text-sm font-semibold text-muted-foreground truncate">
                     {doctor.specialty}
                   </p>
                 </CardHeader>
 
-                <CardContent className="pt-0 pb-3 flex-grow space-y-2">
+                <CardContent className="pt-0 pb-4 flex-grow space-y-3 relative z-10">
                   {/* Rating */}
-                  <StarRating
-                    value={doctor.averageRating || 0}
-                    count={doctor.totalRatings || 0}
-                    size="sm"
-                    showValue
-                  />
+                  <div className="bg-muted/30 p-2 rounded-lg border border-border/50 inline-block">
+                    <StarRating
+                      value={doctor.averageRating || 0}
+                      count={doctor.totalRatings || 0}
+                      size="sm"
+                      showValue
+                    />
+                  </div>
 
                   {/* Availability Badge */}
-                  <Badge
-                    variant={doctor.available ? 'default' : 'secondary'}
-                    className="gap-1.5 text-xs sm:text-sm"
-                  >
-                    <span
-                      className={`h-2 w-2 rounded-full ${doctor.available ? 'bg-green-400' : 'bg-red-400'}`}
-                    />
-                    {doctor.available ? 'Available' : 'Unavailable'}
-                  </Badge>
+                  <div>
+                    <Badge
+                      variant={doctor.available ? 'default' : 'secondary'}
+                      className={`gap-1.5 px-2.5 py-1 text-[11px] uppercase tracking-wider font-bold ${
+                        doctor.available ? 'bg-success/10 text-success hover:bg-success/20 border-success/20' : 'opacity-80'
+                      }`}
+                    >
+                      <span
+                        className={`h-2 w-2 rounded-full ${
+                          doctor.available ? 'bg-success animate-pulse-soft' : 'bg-muted-foreground'
+                        }`}
+                      />
+                      {doctor.available ? 'Available Now' : 'Unavailable'}
+                    </Badge>
+                  </div>
                 </CardContent>
 
                 {/* Action Buttons */}
-                <CardFooter className="pt-3 border-t border-border gap-2 flex-wrap">
+                <CardFooter className="pt-4 border-t border-border/50 gap-2 flex-wrap bg-muted/10 relative z-10">
                   <Button
                     variant="outline"
                     size="sm"
-                    className="flex-1 min-w-[80px]"
+                    className="flex-1 min-w-[80px] h-10 border-border/60 hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-sm"
                     asChild
                   >
                     <Link to={`/doctors/${doctor._id}`}>
-                      <Eye className="mr-1.5 h-5 w-5" />
-                      <span>View</span>
+                      <Eye className="mr-1.5 h-4 w-4" />
+                      <span>View Profile</span>
                     </Link>
                   </Button>
 
                   {isAdmin && (
                     <>
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
-                        className="flex-1 min-w-[80px]"
+                        className="flex-1 min-w-[80px] h-10 shadow-sm"
                         asChild
                       >
                         <Link to={`/doctors/${doctor._id}/update`}>
-                          <Pencil className="mr-1.5 h-5 w-5" />
+                          <Pencil className="mr-1.5 h-4 w-4" />
                           <span>Edit</span>
                         </Link>
                       </Button>
