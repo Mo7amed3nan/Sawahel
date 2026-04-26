@@ -12,6 +12,8 @@ import AboutPage from '@/app/pages/AboutPage';
 import LoginPage from '@/features/auth/pages/LoginPage';
 import SignupPage from '@/features/auth/pages/SignupPage';
 import VerifyEmailPage from '@/features/auth/pages/VerifyEmailPage';
+import ForgotPasswordPage from '@/features/auth/pages/ForgotPasswordPage';
+import ResetPasswordPage from '@/features/auth/pages/ResetPasswordPage';
 import ProfilePage from '@/features/profile/pages/ProfilePage';
 
 import DoctorManageInfoPage from '@/features/doctors/pages/DoctorManageInfoPage';
@@ -40,6 +42,8 @@ export default function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       </Route>
 
       <Route element={<ProtectedRoute />}>

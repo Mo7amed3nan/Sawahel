@@ -27,6 +27,7 @@ const DAYS_OF_WEEK = [
 const buildFormData = (initialData = {}) => ({
   name: initialData?.name || '',
   specialty: initialData?.specialty || '',
+  section: initialData?.section || 'doctors_and_clinics',
   phone: initialData?.phone || '',
   whatsappNumber: initialData?.whatsappNumber || '',
   clinicAddress: initialData?.clinicAddress || '',
@@ -112,6 +113,25 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
         </CardHeader>
 
         <CardContent className="pt-6 space-y-6">
+          {/* Section */}
+          <div className="space-y-2">
+            <Label htmlFor="section">
+              Category / Section <span className="text-destructive">*</span>
+            </Label>
+            <select
+              id="section"
+              name="section"
+              required
+              value={formData.section}
+              onChange={handleChange}
+              className="flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <option value="doctors_and_clinics">Doctors & Clinics</option>
+              <option value="pharmacies">Pharmacies</option>
+              <option value="nurses">Nurses</option>
+            </select>
+          </div>
+
           {/* Name & Specialty */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -188,7 +208,7 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
                 type="tel"
                 value={formData.whatsappNumber}
                 onChange={handleChange}
-                placeholder="01xxxxxxxxx (leave empty to use phone number)"
+                placeholder="01xxxxxxxxx"
                 className="text-base"
               />
             </div>
@@ -310,14 +330,14 @@ const DoctorForm = ({ initialData = {}, onSubmit, error, saving, loading }) => {
               name="additionalInfo"
               value={formData.additionalInfo}
               onChange={handleChange}
-              placeholder="Services offered, languages spoken, special equipment, certifications, etc."
+              placeholder="Services offered, special equipment, certifications, etc."
               className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 resize-y"
               rows={3}
             />
           </div>
 
           {/* Images */}
-          <div className="space-y-3">
+          <div className="space-y-3 mb-4">
             <Label>Images</Label>
             <p className="text-sm text-muted-foreground -mt-1">
               Add image URLs to showcase your clinic, equipment, or

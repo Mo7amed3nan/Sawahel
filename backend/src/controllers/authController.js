@@ -245,7 +245,7 @@ export const resetPassword = async (req, res) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiresAt = undefined;
     await user.save();
-    await sendResetSuccessEmail(user.email);
+    await sendResetSuccessEmail(user.email, process.env.VITE_FRONTEND_URL + '/login');
     res.status(200).json({ message: 'Password reset successful' });
   } catch (error) {
     console.error('Error in resetPassword:', error);

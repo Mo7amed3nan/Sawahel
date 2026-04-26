@@ -6,6 +6,8 @@ import {
   loginRequest,
   checkAuthRequest,
   logoutRequest,
+  forgotPasswordRequest,
+  resetPasswordRequest,
 } from './authApi';
 
 export const useAuthStore = create((set) => ({
@@ -107,6 +109,34 @@ export const useAuthStore = create((set) => ({
       const message = error.response?.data?.message || 'Login failed';
       localStorage.removeItem('jwt');
       set({ error: message, isAuthenticated: false });
+      return { success: false, error: message };
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  forgotPassword: async (email) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data } = await forgotPasswordRequest({ email });
+      return { success: true, message: data.message };
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to send reset email';
+      set({ error: message });
+      return { success: false, error: message };
+    } finally {
+      set({ isLoading: false });
+    }
+  },
+
+  resetPassword: async (token, newPassword) => {
+    set({ isLoading: true, error: null });
+    try {
+      const { data } = await resetPasswordRequest(token, { newPassword });
+      return { success: true, message: data.message };
+    } catch (error) {
+      const message = error.response?.data?.message || 'Failed to reset password';
+      set({ error: message });
       return { success: false, error: message };
     } finally {
       set({ isLoading: false });

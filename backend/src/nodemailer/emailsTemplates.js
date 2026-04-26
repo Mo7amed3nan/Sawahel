@@ -86,9 +86,93 @@ export const welcomeEmailTemplate = (name) => {
 };
 
 export const passwordResetTemplate = (resetUrl) => {
-  return `<p>Please click the link below to reset your password:</p><a href="${resetUrl}" target="_blank" rel="noreferrer">Reset Password</a>`;
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body style="margin:0;background-color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,'Helvetica Neue',sans-serif;color:#0f172a;">
+    <table border="0" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tbody>
+        <tr>
+          <td style="padding:24px;">
+            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(15,23,42,0.08);">
+              <tbody>
+                <tr>
+                  <td style="padding:28px 24px;text-align:center;background:linear-gradient(135deg,#031a26 0%,#0075ab 100%);color:#ffffff;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Waves logo" role="img" style="display:block;margin:0 auto 10px;"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+                    <div style="font-size:22px;font-weight:700;letter-spacing:0.2px;">Sawahel</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:32px 32px 36px 32px;text-align:center;">
+                    <h1 style="margin:0 0 12px 0;font-size:22px;line-height:30px;font-weight:700;">Reset your password</h1>
+                    <p style="margin:0 0 24px 0;font-size:15px;line-height:24px;color:#475569;">You recently requested to reset your password for your Sawahel account. Click the button below to reset it.</p>
+                    <table border="0" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:center;">
+                            <a href="${resetUrl}" target="_blank" rel="noreferrer" style="display:inline-block;padding:12px 32px;background-color:#0284c7;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:600;font-size:15px;">Reset Password</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p style="margin:24px 0 0 0;font-size:14px;line-height:22px;color:#475569;">If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>`;
 };
 
-export const resetSuccessTemplate = () => {
-  return `<p>Your password has been reset successfully. If you did not initiate this change, please contact our support team immediately.</p>`;
+export const resetSuccessTemplate = (loginUrl) => {
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body style="margin:0;background-color:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Ubuntu,'Helvetica Neue',sans-serif;color:#0f172a;">
+    <table border="0" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+      <tbody>
+        <tr>
+          <td style="padding:24px;">
+            <table align="center" width="100%" border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(15,23,42,0.08);">
+              <tbody>
+                <tr>
+                  <td style="padding:28px 24px;text-align:center;background:linear-gradient(135deg,#031a26 0%,#0075ab 100%);color:#ffffff;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Waves logo" role="img" style="display:block;margin:0 auto 10px;"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg>
+                    <div style="font-size:22px;font-weight:700;letter-spacing:0.2px;">Sawahel</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:32px 32px 36px 32px;text-align:center;">
+                    <h1 style="margin:0 0 12px 0;font-size:22px;line-height:30px;font-weight:700;">Password Reset Successful</h1>
+                    <p style="margin:0 0 24px 0;font-size:15px;line-height:24px;color:#475569;">Your password has been successfully reset. You can now log in to your account using your new password.</p>
+                    <table border="0" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                      <tbody>
+                        <tr>
+                          <td style="text-align:center;">
+                            <a href="${loginUrl}" target="_blank" rel="noreferrer" style="display:inline-block;padding:12px 32px;background-color:#0284c7;color:#ffffff;text-decoration:none;border-radius:8px;font-weight:600;font-size:15px;">Log In Now</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <p style="margin:24px 0 0 0;font-size:14px;line-height:22px;color:#475569;">If you did not initiate this change, please contact our support team immediately.</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>`;
 };

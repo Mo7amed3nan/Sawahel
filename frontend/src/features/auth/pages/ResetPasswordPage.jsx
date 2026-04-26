@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Card,
   CardContent,
@@ -10,78 +10,68 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useAuthStore } from '@/features/auth/authStore';
-import { AlertCircle, Eye, EyeOff, Loader2, CheckCircle2, Waves } from 'lucide-react';
-import { toast } from 'sonner';
-import PageTitle from '@/components/common/PageTitle';
+} from '@/components/ui/card'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { useAuthStore } from '@/features/auth/authStore'
+import { AlertCircle, Eye, EyeOff, Loader2, ShieldCheck, CheckCircle2 } from 'lucide-react'
+import { toast } from 'sonner'
+import PageTitle from '@/components/common/PageTitle'
 
-export default function SignupPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const navigate = useNavigate();
+export default function ResetPasswordPage() {
+  const navigate = useNavigate()
+  const { token } = useParams()
+  
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  
+  const { resetPassword, error, isLoading, clearError } = useAuthStore()
 
-  const { signup, error, isLoading, clearError } = useAuthStore();
-
-  const location = useLocation();
-  const isPasswordValid = password.length >= 6;
-  const isConfirmPasswordMatch =
-    confirmPassword.length > 0 && confirmPassword === password;
-  const canSubmit =
-    name && email && isPasswordValid && isConfirmPasswordMatch && !isLoading;
+  const isPasswordValid = password.length >= 6
+  const isConfirmPasswordMatch = password === confirmPassword
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    clearError?.();
+    e.preventDefault()
+    clearError?.()
 
-    if (!isPasswordValid) {
-      toast.error('Password must be at least 6 characters');
-      return;
+    if (!password || !confirmPassword) {
+      toast.error('Please fill in both password fields')
+      return
     }
 
-    if (!isConfirmPasswordMatch) {
-      toast.error('Passwords do not match');
-      return;
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match')
+      return
     }
 
-    const result = await signup(name, email, password);
+    const result = await resetPassword(token, password)
+    
     if (!result?.success) {
-      toast.error(result?.error || error || 'Signup failed');
-      return;
+      toast.error(result?.error || error || 'Failed to reset password')
+      return
     }
 
-    toast.success(
-      result?.message || 'Account ready! Check your email to verify.'
-    );
-    navigate('/verify-email');
-  };
+    toast.success('Password reset successfully! You can now log in.')
+    navigate('/login')
+  }
+
+  const isButtonDisabled = !password || !confirmPassword || isLoading
 
   return (
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 relative">
-      <Button
-        variant="ghost"
-        onClick={() => navigate('/')}
-        className="absolute top-4 sm:top-8 left-4 border border-border/50 bg-background/50 backdrop-blur-sm"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4"><path d="m15 18-6-6 6-6"/></svg>
-        Back to Home
-      </Button>
-      <PageTitle title="Sign Up" />
+      <PageTitle title="Reset Password" />
       <Card className="w-full max-w-md mt-6 sm:mt-0">
         <CardHeader className="text-center space-y-3 pb-2">
           <div className="flex justify-center">
             <div className="bg-primary/10 p-3 rounded-full">
-              <Waves className="h-7 w-7 text-primary" />
+              <ShieldCheck className="h-7 w-7 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl sm:text-3xl">Create account</CardTitle>
-          <CardDescription>Join Sawahel to access all services</CardDescription>
+          <CardTitle className="text-2xl sm:text-3xl">Reset Password</CardTitle>
+          <CardDescription>Enter your new password below</CardDescription>
         </CardHeader>
+
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-5 pt-4">
             {error && (
@@ -90,44 +80,6 @@ export default function SignupPage() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-
-            {/* Name Input */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Ahmed Ali"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  clearError?.();
-                }}
-                required
-                disabled={isLoading}
-                autoComplete="name"
-                className="text-base h-11 sm:h-10"
-              />
-            </div>
-
-            {/* Email Input */}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="ahmed@example.com"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  clearError?.();
-                }}
-                required
-                disabled={isLoading}
-                autoComplete="email"
-                className="text-base h-11 sm:h-10"
-              />
-            </div>
 
             {/* Password Input */}
             <div className="space-y-2">
@@ -235,30 +187,21 @@ export default function SignupPage() {
             <Button
               type="submit"
               className="w-full text-base h-12 sm:h-11"
-              disabled={!canSubmit}
+              disabled={isButtonDisabled}
               size="lg"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Creating account...
+                  Resetting...
                 </>
               ) : (
-                'Create Account'
+                'Reset Password'
               )}
             </Button>
-            <p className="text-sm text-muted-foreground text-center">
-              Already have an account?{' '}
-              <Link
-                to="/login"
-                className="font-medium text-primary hover:underline"
-              >
-                Login here
-              </Link>
-            </p>
           </CardFooter>
         </form>
       </Card>
     </main>
-  );
+  )
 }

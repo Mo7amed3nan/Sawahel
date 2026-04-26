@@ -73,7 +73,7 @@ export default function DoctorsDetailsPage() {
   }
 
   const handleCopyWhatsApp = async () => {
-    const number = selectedDoctor?.whatsappNumber || selectedDoctor?.phone
+    const number = selectedDoctor?.whatsappNumber
     if (!number) return
 
     try {
@@ -87,8 +87,7 @@ export default function DoctorsDetailsPage() {
   }
 
   const handleWhatsAppClick = () => {
-    const whatsappNum =
-      selectedDoctor?.whatsappNumber || selectedDoctor?.phone
+    const whatsappNum = selectedDoctor?.whatsappNumber
     if (!whatsappNum) return
 
     const cleanPhone = whatsappNum.replace(/\D/g, '')
@@ -156,8 +155,7 @@ export default function DoctorsDetailsPage() {
       ? `${formattedTime(doctorData.startTime)} - ${formattedTime(doctorData.endTime)}`
       : doctorData.workingHours || 'Not specified'
 
-  const whatsappDisplay =
-    doctorData.whatsappNumber || doctorData.phone
+  const whatsappDisplay = doctorData.whatsappNumber
 
   return (
     <div className="min-h-screen bg-background">
@@ -206,6 +204,15 @@ export default function DoctorsDetailsPage() {
 
             {/* Name, Specialty & Rating */}
             <div>
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <Badge variant="outline" className="bg-primary/10 text-primary hover:bg-primary/20 border-primary/20">
+                  {doctorData.section === 'pharmacies' 
+                    ? 'Pharmacy' 
+                    : doctorData.section === 'nurses' 
+                      ? 'Nurse' 
+                      : 'Doctor & Clinic'}
+                </Badge>
+              </div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-foreground break-words">
                 {doctorData.name}
               </h1>
@@ -250,14 +257,14 @@ export default function DoctorsDetailsPage() {
 
         {/* Tabs Content Navigation */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 mb-8 h-12 p-1 bg-muted/60">
-            <TabsTrigger value="overview" className="text-base data-[state=active]:bg-background">
+          <TabsList className="flex flex-col sm:flex-row w-full mb-8 h-auto p-1 bg-muted/60 gap-1 sm:gap-0">
+            <TabsTrigger value="overview" className="w-full sm:w-auto text-base data-[state=active]:bg-background">
               Overview
             </TabsTrigger>
-            <TabsTrigger value="contact" className="text-base data-[state=active]:bg-background">
+            <TabsTrigger value="contact" className="w-full sm:w-auto text-base data-[state=active]:bg-background">
               Contact & Location
             </TabsTrigger>
-            <TabsTrigger value="gallery" className="text-base data-[state=active]:bg-background">
+            <TabsTrigger value="gallery" className="w-full sm:w-auto text-base data-[state=active]:bg-background">
               Gallery & Extra
             </TabsTrigger>
           </TabsList>
