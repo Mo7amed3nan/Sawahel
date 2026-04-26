@@ -16,6 +16,11 @@ const doctorSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    section: {
+      type: String,
+      enum: ['doctors_and_clinics', 'pharmacies', 'nurses'],
+      default: 'doctors_and_clinics',
+    },
     phone: {
       type: String,
       required: true,

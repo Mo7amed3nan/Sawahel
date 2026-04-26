@@ -32,7 +32,10 @@ export default function LoginPage() {
     if (sessionExpired) {
       toast.error('Session expired. Please login again.')
     }
-  }, [location.state])
+
+    clearError?.()
+
+  }, [location.state, clearError])
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value)
@@ -78,11 +81,11 @@ export default function LoginPage() {
     <main className="flex min-h-screen items-center justify-center bg-background px-4 py-8 relative">
       <Button
         variant="ghost"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate('/')}
         className="absolute top-4 sm:top-8 left-4 border border-border/50 bg-background/50 backdrop-blur-sm"
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4"><path d="m15 18-6-6 6-6"/></svg>
-        Back
+        Back to Home
       </Button>
       <PageTitle title="Login" />
       <Card className="w-full max-w-md mt-6 sm:mt-0">

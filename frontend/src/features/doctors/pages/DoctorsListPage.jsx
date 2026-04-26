@@ -34,6 +34,7 @@ export default function DoctorsListPage() {
   const { user } = useAuthStore()
   const isAdmin = user?.role === 'admin'
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeTab, setActiveTab] = useState('all')
 
   useEffect(() => {
     const loadDoctorsData = async () => {
@@ -60,10 +61,12 @@ export default function DoctorsListPage() {
   
   const filteredDoctors = doctors.filter((doc) => {
     const q = searchQuery.toLowerCase()
-    return (
-      doc.name.toLowerCase().includes(q) ||
-      doc.specialty?.toLowerCase().includes(q)
-    )
+    const matchesSearch = doc.name.toLowerCase().includes(q) || doc.specialty?.toLowerCase().includes(q)
+    
+    if (activeTab === 'all') return matchesSearch
+    
+    const docSection = doc.section || 'doctors_and_clinics'
+    return matchesSearch && docSection === activeTab
   })
 
   return (
@@ -88,7 +91,7 @@ export default function DoctorsListPage() {
             Browse and connect with registered professionals in Ras Sedr
           </p>
 
-          <div className="relative max-w-md">
+          <div className="relative max-w-md mb-6">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-muted-foreground" />
             </div>
@@ -99,6 +102,26 @@ export default function DoctorsListPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 h-12 bg-background/50 backdrop-blur-sm border-border/80 shadow-sm text-base rounded-2xl focus-visible:ring-primary"
             />
+          </div>
+
+          {/* Section Filters */}
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: 'all', label: 'All Services' },
+              { id: 'doctors_and_clinics', label: 'Doctors & Clinics' },
+              { id: 'pharmacies', label: 'Pharmacies' },
+              { id: 'nurses', label: 'Nurses' },
+            ].map((tab) => (
+              <Button
+                key={tab.id}
+                variant={activeTab === tab.id ? "default" : "outline"}
+                size="sm"
+                onClick={() => setActiveTab(tab.id)}
+                className={`rounded-full ${activeTab === tab.id ? 'shadow-sm' : 'bg-background/50'}`}
+              >
+                {tab.label}
+              </Button>
+            ))}
           </div>
         </div>
 
@@ -155,6 +178,15 @@ export default function DoctorsListPage() {
 
                 {/* Card Body */}
                 <CardHeader className="pt-10 pb-3 sm:pb-4 relative z-10">
+                  <div className="mb-2">
+                    <Badge variant="outline" className="text-[10px] uppercase tracking-wider bg-background/50 border-border/60">
+                      {doctor.section === 'pharmacies' 
+                        ? 'Pharmacy' 
+                        : doctor.section === 'nurses' 
+                          ? 'Nurse' 
+                          : 'Doctor & Clinic'}
+                    </Badge>
+                  </div>
                   <h3 className="text-lg sm:text-xl font-bold text-foreground truncate group-hover:text-primary transition-colors">
                     {doctor.name}
                   </h3>

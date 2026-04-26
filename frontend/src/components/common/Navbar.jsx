@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 export default function Navbar() {
   const { isAuthenticated, user, logout, isCheckingAuth } = useAuthStore();
   const location = useLocation();
+  const [isLogingout, setIsLogingout] = useState(false)
   const [theme, setTheme] = useState(
     () => localStorage.getItem('theme') || 'light'
   );
@@ -57,10 +58,17 @@ export default function Navbar() {
 
   const handleLogout = () => {
     try {
-      logout();
-      toast.success('Logged out successfully');
+      const handleLogout = async()=>{
+        setIsLogingout(true)
+        await logout();
+        toast.success('Logged out successfully');
+      }
+      handleLogout();
     } catch (error) {
       toast.error('Failed to logout');
+    }
+    finally{
+      setIsLogingout(false)
     }
   };
 
@@ -190,11 +198,14 @@ export default function Navbar() {
                         onClick={handleLogout}
                         className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg text-sm font-bold text-destructive bg-destructive/10 hover:bg-destructive hover:text-destructive-foreground transition-colors w-full"
                       >
-                        <LogOut className="h-4 w-4" />
-                        Logout
+                        {isLogingout ? (  
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <LogOut className="h-4 w-4" />
+                        )}
                       </button>
                     </div>
-                  </div>
+                  </div>  
                 )}
               </div>
             ) : (
