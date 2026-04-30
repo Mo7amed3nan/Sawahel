@@ -108,9 +108,9 @@ function UnauthenticatedHome() {
         <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: Users, label: 'Active Members', value: '10+', color: 'text-blue-500' },
-              { icon: Stethoscope, label: 'Verified Doctors', value: '5+', color: 'text-teal-500' },
-              { icon: ShoppingCart, label: 'Daily Visits', value: '20+', color: 'text-amber-500' },
+              { icon: Users, label: 'Active Members', value: '300+', color: 'text-blue-500' },
+              { icon: Stethoscope, label: 'Verified Doctors', value: '10+', color: 'text-teal-500' },
+              { icon: ShoppingCart, label: 'Daily Visits', value: '50+', color: 'text-amber-500' },
               { icon: CheckCircle, label: 'Trust Rating', value: '99%', color: 'text-green-500' },
             ].map((stat, i) => {
               const Icon = stat.icon
